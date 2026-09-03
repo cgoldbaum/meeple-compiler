@@ -15,7 +15,7 @@
 
 ## Documentation
 
-* [Especificación de Meeple](docs/Especificacion-Meeple.pdf)
+* [Especificación de Meeple](doc/Especificacion-Meeple.pdf)
 
 ## Requirements
 
