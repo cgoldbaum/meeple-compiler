@@ -1,16 +1,21 @@
-[![✗](https://img.shields.io/badge/Release-v2.0.0-ffb600.svg?style=for-the-badge)](https://github.com/agustin-golmar/Flex-Bison-Compiler/releases)
+[![✗](https://img.shields.io/badge/Release-v1.0.0-ffb600.svg?style=for-the-badge)](https://github.com/cgoldbaum/meeple-compiler/releases)
 
-[![✗](https://github.com/agustin-golmar/Flex-Bison-Compiler/actions/workflows/pipeline.yaml/badge.svg?branch=production)](https://github.com/agustin-golmar/Flex-Bison-Compiler/actions/workflows/pipeline.yaml)
+[![✗](https://github.com/cgoldbaum/meeple-compiler/actions/workflows/pipeline.yaml/badge.svg?branch=development)](https://github.com/cgoldbaum/meeple-compiler/actions/workflows/pipeline.yaml)
 
-# Flex-Bison-Compiler
+# Meeple
 
-A base compiler example, developed with Flex and Bison.
+**Meeple** is a DSL to design, simulate and balance board games. The compiler developed with Flex and Bison, using the [Flex-Bison-Compiler](https://github.com/agustin-golmar/Flex-Bison-Compiler) project (branch `development`) as its base.
 
+* [Documentation](#documentation)
 * [Requirements](#requirements)
 * [Configuration](#configuration)
 * [Commands](#commands)
 * [CI/CD](#cicd)
 * [Recommended Extensions](#recommended-extensions)
+
+## Documentation
+
+* [Especificación de Meeple](docs/Especificacion-Meeple.pdf)
 
 ## Requirements
 
