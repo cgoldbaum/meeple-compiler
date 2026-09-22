@@ -177,6 +177,9 @@ void pushInputBuffer(InputBuffer * inputBuffer) {
 }
 
 CompilationStatus pushToken(LexicalAnalyzer * lexicalAnalyzer, Token * token) {
+	YYLTYPE * location = (YYLTYPE *) lexicalAnalyzer->location;
+	location->first_line = token->line;
+	location->last_line = token->line;
 	return (CompilationStatus) yypush_parse(
 		(yypstate *) lexicalAnalyzer->parser,
 		token->label,
