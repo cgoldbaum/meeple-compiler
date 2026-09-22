@@ -25,7 +25,7 @@ ModuleDestructor initializeGeneratorModule() {
 static char * _indentation(const unsigned int indentationLevel);
 static const char _expressionTypeToCharacter(const ExpressionType type);
 static void _generateConstant(const unsigned int indentationLevel, Constant * constant);
-static void _generateEpilogue(const int value);
+static void _generateEpilogue(void);
 static void _generateExpression(const unsigned int indentationLevel, Expression * expression);
 static void _generateFactor(const unsigned int indentationLevel, Factor * factor);
 static void _generateProgram(Program * program);
@@ -61,9 +61,8 @@ static void _generateConstant(const unsigned int indentationLevel, Constant * co
  * Creates the epilogue of the generated output, that is, the final lines that
  * completes a valid Latex document.
  */
-static void _generateEpilogue(const int value) {
-	_output(0, "%s%d%s",
-		"            [ $", value, "$, circle, draw, blue ]\n"
+static void _generateEpilogue(void) {
+	_output(0, "%s",
 		"        ]\n"
 		"    \\end{forest}\n"
 		"\\end{document}\n\n"
@@ -173,6 +172,6 @@ void executeGenerator(CompilerState * compilerState) {
 	logDebugging(_logger, "Generating final output...");
 	_generatePrologue();
 	_generateProgram(compilerState->abstractSyntaxtTree);
-	_generateEpilogue(compilerState->value);
+	_generateEpilogue();
 	logDebugging(_logger, "Generation is done.");
 }
