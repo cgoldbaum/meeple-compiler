@@ -1,0 +1,1 @@
+game "Dados" { players 2 to 2; die D6 faces 1 to 6; die Moneda faces {0, 1}; }

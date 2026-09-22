@@ -1,0 +1,6 @@
+game "Nulos" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta { card { v: 1; } }
+	turn { Carta c = min(x in Mazo by x.v); if (c != none) { give 1 to current; } }
+}

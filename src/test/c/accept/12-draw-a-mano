@@ -1,0 +1,7 @@
+game "Reparto" {
+	players 2 to 4;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta { card { v: 1; } card { v: 2; } }
+	deck Mano of Carta per player;
+	setup { shuffle Mazo; for (p in players) { draw 1 from Mazo to p.Mano; } }
+}

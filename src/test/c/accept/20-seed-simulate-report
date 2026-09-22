@@ -1,0 +1,4 @@
+seed 42;
+game "Balance" { players 2 to 4; win when current.score >= 10; }
+simulate 1000 games of "Balance" with 4 players;
+report { winrate by player; winrate by strategy; avg turns; }

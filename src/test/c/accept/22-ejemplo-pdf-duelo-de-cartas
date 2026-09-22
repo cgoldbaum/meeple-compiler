@@ -1,0 +1,36 @@
+seed 1;
+game "Duelo de Cartas" {
+    players 2 to 2;
+    cardtype Carta { integer ataque; integer costo; }
+    deck Mazo of Carta {
+        card { ataque: 1; costo: 1; }   card { ataque: 2; costo: 1; }
+        card { ataque: 3; costo: 2; }   card { ataque: 4; costo: 3; }
+    }
+    deck Mano of Carta per player;
+    deck Mesa of Carta;
+    decision jugar(opciones: Carta[]) -> Carta;
+    strategy Agresivo  { jugar: prefer max option.ataque; }
+    strategy Economico { jugar: prefer min option.costo;  }
+    setup {
+        shuffle Mazo;
+        for (p in players) {
+            draw 3 from Mazo to p.Mano;
+            give 5 to p;
+        }
+        players[0] uses Agresivo;
+        players[1] uses Economico;
+    }
+    turn {
+        if (count(c in Mazo) > 0) { draw 1 from Mazo to current.Mano; }
+        Carta elegida = ask current for jugar(current.Mano);
+        if (elegida != none and elegida.costo <= current.score) {
+            take elegida.costo from current;
+            play elegida from current.Mano to Mesa;
+            give elegida.ataque to current;
+        }
+    }
+    win when current.score >= 15;
+    end after 20 turns;
+}
+simulate 5000 games of "Duelo de Cartas" with 2 players;
+report { winrate by strategy; avg turns; }

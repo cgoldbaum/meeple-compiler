@@ -1,0 +1,1 @@
+game "Carrera" { players 2 to 4; board Tablero cells 63; }

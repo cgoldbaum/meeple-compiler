@@ -1,0 +1,6 @@
+game "Mazos" {
+	players 2 to 4;
+	cardtype Carta { integer ataque; }
+	deck Mazo of Carta { card { ataque: 1; } }
+	deck Mano of Carta per player;
+}

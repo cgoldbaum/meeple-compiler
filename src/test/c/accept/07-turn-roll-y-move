@@ -1,0 +1,7 @@
+game "Turno" {
+	players 2 to 4;
+	board Tablero cells 63;
+	die D6 faces 1 to 6;
+	piece token per player;
+	turn { integer pasos = roll D6; move current.token forward pasos; }
+}

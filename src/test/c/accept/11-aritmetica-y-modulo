@@ -1,0 +1,1 @@
+game "Aritmetica" { players 2 to 2; turn { integer a = 7 + 3 - 2 * 4 / 2 % 3; give a to current; } }

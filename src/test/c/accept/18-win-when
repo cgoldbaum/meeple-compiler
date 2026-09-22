@@ -1,0 +1,1 @@
+game "Victoria" { players 2 to 2; win when current.score >= 10; }

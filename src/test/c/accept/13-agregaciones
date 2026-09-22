@@ -1,0 +1,13 @@
+game "Agregaciones" {
+	players 2 to 4;
+	cardtype Carta { integer v; string palo; }
+	deck Mazo of Carta { card { v: 1; palo: "oro"; } }
+	turn {
+		integer n = count(c in Mazo);
+		integer m = count(c in Mazo where c.palo == "oro");
+		integer s = sum(p in players by p.score);
+		player mejor = max(p in players by p.score);
+		Carta menor = min(c in Mazo by c.v);
+		Carta[] altas = select(c in Mazo where c.v > 0);
+	}
+}

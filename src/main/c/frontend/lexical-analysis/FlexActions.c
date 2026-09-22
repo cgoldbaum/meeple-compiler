@@ -46,14 +46,6 @@ static void _logTokenAction(const char * actionName, Token * token) {
 
 /* PUBLIC FUNCTIONS */
 
-CompilationStatus ArithmeticOperatorLexemeAction(TokenLabel label) {
-	Token * token = createToken(_lexicalAnalyzer, label);
-	_logTokenAction(__FUNCTION__, token);
-	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
-	destroyToken(token);
-	return status;
-}
-
 CompilationStatus EnterMultilineCommentLexemeAction(FlexContext context) {
 	if (_logIgnoredLexemes) {
 		Token * token = createToken(_lexicalAnalyzer, OPEN_COMMENT);
@@ -76,6 +68,23 @@ CompilationStatus EOFLexemeAction() {
 			status = FAILED;
 		}
 	}
+	destroyToken(token);
+	return status;
+}
+
+/**
+ * Emite un IDENTIFIER. El lexema se copia con strdup y el puntero pasa a ser
+ * propiedad del parser (ver el %destructor de <string> en BisonGrammar.y).
+ */
+CompilationStatus IdentifierLexemeAction() {
+	Token * token = createToken(_lexicalAnalyzer, IDENTIFIER);
+	token->semanticValue->string = strdup(token->lexeme);
+	if (token->semanticValue->string == NULL) {
+		destroyToken(token);
+		return OUT_OF_MEMORY;
+	}
+	_logTokenAction(__FUNCTION__, token);
+	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
 	return status;
 }
@@ -108,7 +117,31 @@ CompilationStatus LeaveMultilineCommentLexemeAction() {
 	return IN_PROGRESS;
 }
 
-CompilationStatus ParenthesisLexemeAction(TokenLabel label) {
+/**
+ * Emite un STRING guardando el contenido *sin* las comillas. El lexema que
+ * matcheo Flex es "\"...\"", de largo token->length, asi que el contenido
+ * arranca en lexeme+1 y mide token->length-2.
+ */
+CompilationStatus StringLexemeAction() {
+	Token * token = createToken(_lexicalAnalyzer, STRING);
+	token->semanticValue->string = strndup(token->lexeme + 1, token->length - 2);
+	if (token->semanticValue->string == NULL) {
+		destroyToken(token);
+		return OUT_OF_MEMORY;
+	}
+	_logTokenAction(__FUNCTION__, token);
+	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
+	destroyToken(token);
+	return status;
+}
+
+/**
+ * Accion generica para toda palabra clave y todo simbolo, es decir, para los
+ * tokens que no acarrean valor semantico. Reemplaza a la familia de funciones
+ * del proyecto base (ArithmeticOperator, Parenthesis, ...), que con 103 tokens
+ * no escala.
+ */
+CompilationStatus TokenLexemeAction(TokenLabel label) {
 	Token * token = createToken(_lexicalAnalyzer, label);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);

@@ -1,0 +1,5 @@
+game "Cartas" {
+	players 2 to 2;
+	cardtype Naipe { integer valor; string palo; }
+	deck Mazo of Naipe { card { valor: 1; palo: "oro"; } card { valor: 2; palo: "copa"; } }
+}

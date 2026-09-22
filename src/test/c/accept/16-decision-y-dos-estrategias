@@ -1,0 +1,8 @@
+game "Politicas" {
+	players 2 to 2;
+	cardtype Carta { integer ataque; integer costo; }
+	deck Mano of Carta per player;
+	decision jugar(opciones: Carta[]) -> Carta;
+	strategy Agresivo { jugar: prefer max option.ataque; }
+	strategy Economico { jugar: prefer min option.costo; }
+}

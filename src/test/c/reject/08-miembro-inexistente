@@ -1,0 +1,1 @@
+game "X" { turn { integer x = current.player; } }

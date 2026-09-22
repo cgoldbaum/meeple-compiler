@@ -1,0 +1,5 @@
+game "IfElse" {
+	players 2 to 2;
+	die D6 faces 1 to 6;
+	turn { integer x = roll D6; if (x > 3) { give 1 to current; } else { take 1 from current; } }
+}

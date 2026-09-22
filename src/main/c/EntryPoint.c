@@ -34,7 +34,14 @@ const int main(const int length, const char ** arguments) {
 		// ----------------------------------------------------------------------------------------
 		// Beginning of the Backend... ------------------------------------------------------------
 		// TODO (Stage III): analisis semantico sobre el AST antes de generar.
-		executeGenerator(&compilerState);
+		if (program == NULL) {
+			// Estado transitorio: la gramatica de Meeple ya parsea, pero sus
+			// acciones todavia no construyen el AST. El programa es valido.
+			logDebugging(logger, "Parsing OK. El AST todavia no se construye.");
+		}
+		else {
+			executeGenerator(&compilerState);
+		}
 		// ...end of the Backend. -----------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------
 	}

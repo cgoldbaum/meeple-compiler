@@ -1,0 +1,6 @@
+game "Setup" {
+	players 2 to 4;
+	board Tablero cells 10;
+	piece token per player;
+	setup { for (p in players) { place p.token on Tablero.cell(0); } }
+}

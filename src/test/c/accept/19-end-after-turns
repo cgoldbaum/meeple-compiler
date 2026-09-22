@@ -1,0 +1,1 @@
+game "Cota" { players 2 to 2; end after 20 turns; }
