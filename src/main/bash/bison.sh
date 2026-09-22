@@ -9,7 +9,10 @@ GREEN='\033[0;32m'
 OFF='\033[0m'
 
 bison \
+	-Wall \
 	-Wcounterexamples \
+	-Werror=conflicts-sr \
+	-Werror=conflicts-rr \
 	-d "src/main/c/frontend/syntactic-analysis/BisonGrammar.y" \
 	--output="src/main/c/frontend/syntactic-analysis/BisonParser.c"
 
