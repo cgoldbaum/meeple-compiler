@@ -1,0 +1,10 @@
+// PDF §5.2 caso 6: draw entre mazos de cardtype distinto.
+// Requiere type-checker -> Stage III.
+game "X" {
+	players 2 to 2;
+	cardtype A { integer v; }
+	cardtype B { integer w; }
+	deck MazoA of A { card { v: 1; } }
+	deck MazoB of B { card { w: 1; } }
+	turn { draw 1 from MazoA to MazoB; }
+}

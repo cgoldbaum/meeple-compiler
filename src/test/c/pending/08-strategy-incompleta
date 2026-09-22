@@ -1,0 +1,9 @@
+// PDF §5.2 caso 8: la strategy no resuelve todos los decision declarados.
+// Chequeo P1 previsto en el plan 09 §7; todavia no implementado.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	decision jugar(opciones: Carta[]) -> Carta;
+	decision descartar(opciones: Carta[]) -> Carta;
+	strategy Incompleta { jugar: prefer max option.v; }
+}

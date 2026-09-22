@@ -1,0 +1,8 @@
+// PDF §5.2 caso 4: sumar una carta con un integer.
+// Requiere type-checker -> Stage III.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta { card { v: 1; } }
+	turn { integer x = Mazo[0] + 1; }
+}

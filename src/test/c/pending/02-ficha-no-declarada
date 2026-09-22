@@ -1,0 +1,3 @@
+// PDF §5.2 caso 2: referencia a una ficha no declarada.
+// Stage II lo ACEPTA (falso positivo): requiere tabla de simbolos -> Stage III.
+game "X" { players 2 to 2; turn { move current.fantasma forward 1; } }

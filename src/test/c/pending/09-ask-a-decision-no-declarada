@@ -1,0 +1,8 @@
+// PDF §5.2 caso 9: ask sobre un punto de decision que no existe.
+// Chequeo P1 previsto en el plan 09 §7; todavia no implementado.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mano of Carta per player;
+	turn { Carta c = ask current for inexistente(current.Mano); }
+}

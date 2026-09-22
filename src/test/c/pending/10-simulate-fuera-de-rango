@@ -1,0 +1,4 @@
+// PDF §5.2 caso 10: juego inexistente, o mas jugadores que el maximo.
+// Chequeo P1 previsto en el plan 09 §7; todavia no implementado.
+game "X" { players 2 to 4; }
+simulate 10 games of "X" with 99 players;
