@@ -13,7 +13,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 	# Compiles the parser with Bison, generating counter-examples in case S/R or R/R conflicts exists.
 	add_custom_command(
 		OUTPUT ../src/main/c/frontend/syntactic-analysis/BisonParser.c ../src/main/c/frontend/syntactic-analysis/BisonParser.h
-		COMMAND ../src/main/bash/bison.sh
+		COMMAND bash ../src/main/bash/bison.sh
 	)
 
 	# Options for GCC.
@@ -26,7 +26,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 	# Compiles the scanner with Flex.
 	add_custom_command(
 		OUTPUT ../src/main/c/frontend/lexical-analysis/FlexScanner.c ../src/main/c/frontend/lexical-analysis/FlexScanner.h
-		COMMAND ../src/main/bash/flex.sh
+		COMMAND bash ../src/main/bash/flex.sh
 		DEPENDS ../src/main/c/frontend/syntactic-analysis/BisonParser.c ../src/main/c/frontend/syntactic-analysis/BisonParser.h
 	)
 

@@ -1,5 +1,6 @@
 # Text formats.
 .dockerignore text eol=lf
+.editorconfig text eol=lf
 .gitattributes text eol=lf
 .gitignore text eol=lf
 .gitkeep text eol=lf
@@ -53,6 +54,10 @@
 *.yaml text eol=lf
 *.yml text eol=lf
 Dockerfile text eol=lf
+
+# Los casos de test no tienen extension: sin esta regla, Git para Windows los
+# baja con CRLF.
+src/test/** text eol=lf
 
 # Binary formats.
 *.bmp binary

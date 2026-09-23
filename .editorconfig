@@ -1,0 +1,10 @@
+# @see https://editorconfig.org/
+
+# Fuerza LF al crear archivos desde Windows: un script con CRLF falla dentro
+# del contenedor ("bad interpreter: /bin/bash^M").
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
