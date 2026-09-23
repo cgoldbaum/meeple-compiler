@@ -1,9 +1,0 @@
-// PDF §5.2 caso 11: el juego no declara ninguna condicion win when.
-//
-// CONGELADO. La devolucion de la catedra (G-145, punto 8) objeta este caso de
-// rechazo: contradice al caso de ACEPTACION 1 del mismo PDF, que dice que un
-// juego minimo tiene solo nombre y rango de jugadores. Y observa, con razon,
-// que un juego sin ganador es perfectamente simulable.
-//
-// No se implementa el chequeo hasta resolver la consulta. Ver plan 09 §7.
-game "X" { players 2 to 2; }

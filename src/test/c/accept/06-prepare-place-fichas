@@ -1,0 +1,6 @@
+game "Prepare" {
+	players 2 to 4;
+	board cells 10;
+	piece token per player;
+	prepare { for (p in players) { place p.token on board.cell(0); } }
+}

@@ -3,7 +3,7 @@
 game "X" {
 	players 2 to 2;
 	cardtype Carta { integer v; }
-	decision jugar(opciones: Carta[]) -> Carta;
-	decision descartar(opciones: Carta[]) -> Carta;
+	decision jugar: Carta;
+	decision descartar: Carta;
 	strategy Incompleta { jugar: prefer max option.v; }
 }

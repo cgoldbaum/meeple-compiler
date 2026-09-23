@@ -1,0 +1,18 @@
+game "UNO" {
+	players 2 to 4;
+	integer cartasJugadas = 0;
+	metric jugadas = cartasJugadas;
+	metric puntajeMaximo = max(p in players by p.score).score;
+	turn { cartasJugadas = cartasJugadas + 1; }
+	end after 30 turns;
+}
+simulate 1000 games of "UNO" with 4 players seed 1;
+report {
+	winrate;
+	winrate by player;
+	winrate by strategy;
+	avg turns;
+	min turns;
+	avg jugadas;
+	max puntajeMaximo;
+}

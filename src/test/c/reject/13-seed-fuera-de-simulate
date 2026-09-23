@@ -1,0 +1,2 @@
+seed 42;
+game "X" { players 2 to 2; }

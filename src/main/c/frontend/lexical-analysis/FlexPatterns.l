@@ -14,11 +14,13 @@
  * @see https://westes.github.io/flex/manual/Definitions-Section.html#Definitions-Section
  */
 
+extern CompilationStatus EnterInterpolationLexemeAction(TokenLabel label, FlexContext context);
 extern CompilationStatus EnterMultilineCommentLexemeAction(FlexContext context);
 extern CompilationStatus EOFLexemeAction();
 extern CompilationStatus IdentifierLexemeAction();
 extern CompilationStatus IgnoredLexemeAction();
 extern CompilationStatus IntegerLexemeAction();
+extern CompilationStatus LeaveInterpolationLexemeAction(TokenLabel label);
 extern CompilationStatus LeaveMultilineCommentLexemeAction();
 extern CompilationStatus StringLexemeAction();
 extern CompilationStatus TokenLexemeAction(TokenLabel label);
@@ -34,6 +36,13 @@ extern CompilationStatus UnknownLexemeAction();
 %x MULTILINE_COMMENT
 
 /**
+ * Contexto INCLUSIVO (%s): dentro de una interpolacion "{...}" de un log siguen
+ * activas todas las reglas del contexto inicial, porque ahi va una expresion
+ * cualquiera. Solo se agregan las reglas que cierran la interpolacion.
+ */
+%s INTERPOLATION
+
+/**
  * Reusable patterns.
  *
  * @see https://westes.github.io/flex/manual/Matching.html
@@ -41,12 +50,18 @@ extern CompilationStatus UnknownLexemeAction();
  */
 whitespace			[[:space:]]+
 
+/**
+ * Texto de una cadena: sin comillas, sin llaves y sin saltos de linea. Las
+ * llaves quedan reservadas para delimitar las interpolaciones del log.
+ */
+stringText			[^\"{}\n]*
+
 %%
 
 %{
 
 /**
- * El alfabeto Σ de Meeple: 103 simbolos (77 palabras clave, 23 simbolos y 3
+ * El alfabeto Σ de Meeple: 105 simbolos (77 palabras clave, 22 simbolos y 6
  * literales).
  *
  * Sobre el ORDEN de las reglas. Flex aplica *longest match* PRIMERO, y el
@@ -90,8 +105,7 @@ whitespace			[[:space:]]+
 "of"								{ return TokenLexemeAction(OF); }
 "cardtype"							{ return TokenLexemeAction(CARDTYPE); }
 "card"								{ return TokenLexemeAction(CARD); }
-"setup"								{ return TokenLexemeAction(SETUP); }
-"turn_number"						{ return TokenLexemeAction(TURN_NUMBER); }
+"prepare"							{ return TokenLexemeAction(PREPARE); }
 "turns"								{ return TokenLexemeAction(TURNS); }
 "turn"								{ return TokenLexemeAction(TURN); }
 "order"								{ return TokenLexemeAction(ORDER); }
@@ -104,6 +118,7 @@ whitespace			[[:space:]]+
 "strategy"							{ return TokenLexemeAction(STRATEGY); }
 "prefer"							{ return TokenLexemeAction(PREFER); }
 "first"								{ return TokenLexemeAction(FIRST); }
+"input"								{ return TokenLexemeAction(INPUT); }
 "random"							{ return TokenLexemeAction(RANDOM); }
 "ask"								{ return TokenLexemeAction(ASK); }
 "for"								{ return TokenLexemeAction(FOR); }
@@ -147,8 +162,6 @@ whitespace			[[:space:]]+
 "give"								{ return TokenLexemeAction(GIVE); }
 "take"								{ return TokenLexemeAction(TAKE); }
 "log"								{ return TokenLexemeAction(LOG); }
-"level"								{ return TokenLexemeAction(LEVEL); }
-"verbose"							{ return TokenLexemeAction(VERBOSE); }
 
 	/* Condiciones de fin (§4.7). */
 
@@ -161,10 +174,12 @@ whitespace			[[:space:]]+
 
 "seed"								{ return TokenLexemeAction(SEED); }
 "simulate"							{ return TokenLexemeAction(SIMULATE); }
+"verbose"							{ return TokenLexemeAction(VERBOSE); }
 "with"								{ return TokenLexemeAction(WITH); }
 "report"							{ return TokenLexemeAction(REPORT); }
 "winrate"							{ return TokenLexemeAction(WINRATE); }
 "avg"								{ return TokenLexemeAction(AVG); }
+"metric"							{ return TokenLexemeAction(METRIC); }
 
 	/* Variables predefinidas y literales del dominio (§4.1). */
 
@@ -182,7 +197,6 @@ whitespace			[[:space:]]+
 
 	/* Operadores de dos caracteres: los resuelve solo el longest match. */
 
-"->"								{ return TokenLexemeAction(ARROW); }
 "=="								{ return TokenLexemeAction(EQ); }
 "!="								{ return TokenLexemeAction(NE); }
 "<="								{ return TokenLexemeAction(LE); }
@@ -215,11 +229,28 @@ whitespace			[[:space:]]+
 	/*
 	 * Literales. El signo NO se lexea junto al numero: con "-?[0-9]+", la
 	 * entrada "a - 5" dejaria de parsear. El menos se resuelve siempre en la
-	 * gramatica (menos unario, o "signedInteger" en "die ... faces").
+	 * gramatica (menos unario, o "signedInteger" en "die ... faces" y en los
+	 * generadores de mazo).
 	 */
 
 [[:digit:]]+						{ return IntegerLexemeAction(); }
-\"[^\"]*\"							{ return TokenLexemeAction(STRING); }
+\"{stringText}\"					{ return TokenLexemeAction(STRING); }
+
+	/*
+	 * Cadenas interpoladas del log (template strings). Una cadena con "{" se
+	 * parte en STRING_HEAD ("texto{"), STRING_MIDDLE ("}texto{") y STRING_TAIL
+	 * ("}texto"). Entre las partes el lexer esta en INTERPOLATION, que es
+	 * inclusivo, y lexea la expresion con las reglas de siempre. Las
+	 * expresiones de Meeple no usan llaves, asi que un "}" dentro de
+	 * INTERPOLATION siempre cierra la interpolacion; el longest match elige
+	 * STRING_MIDDLE o STRING_TAIL por sobre RBRACE. Una interpolacion sin
+	 * cerrar termina en un error de sintaxis (RBRACE suelto, o EOF dentro del
+	 * contexto).
+	 */
+
+\"{stringText}\{					{ return EnterInterpolationLexemeAction(STRING_HEAD, INTERPOLATION); }
+<INTERPOLATION>\}{stringText}\{		{ return TokenLexemeAction(STRING_MIDDLE); }
+<INTERPOLATION>\}{stringText}\"		{ return LeaveInterpolationLexemeAction(STRING_TAIL); }
 
 	/* IDENTIFIER va al final de todo: es el unico que empata con las keywords. */
 

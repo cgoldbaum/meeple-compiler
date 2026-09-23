@@ -1,3 +1,0 @@
-// PDF §5.2 caso 7: mas marcadores posicionales que argumentos.
-// Chequeo P0 previsto en el plan 09 §7.1; todavia no implementado.
-game "X" { players 2 to 2; turn { log "{1} y {2}", current; } }

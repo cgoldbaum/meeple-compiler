@@ -1,0 +1,5 @@
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	decision jugar(opciones: Carta[]) -> Carta;
+}

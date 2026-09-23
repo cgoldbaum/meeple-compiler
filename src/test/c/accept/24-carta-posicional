@@ -1,0 +1,6 @@
+game "Posicional" {
+	players 2 to 2;
+	cardtype Carta { integer ataque; integer costo; }
+	deck Mano of Carta { card {1, 1}  card {2, 1}  card {3, 2} }
+	deck Especial of Carta { card { ataque: 9; costo: 5; } }
+}

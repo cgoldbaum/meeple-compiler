@@ -1,1 +1,2 @@
-seed -1;
+game "X" { players 2 to 2; }
+simulate 10 games of "X" with 2 players seed -1;

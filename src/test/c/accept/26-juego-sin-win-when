@@ -1,0 +1,5 @@
+// Ex caso de rechazo 11 del PDF. La devolucion (punto 8) lo objeto: contradice
+// al caso de aceptacion 1 y un juego sin ganador es simulable. Se acepta.
+game "Sin ganador" { players 2 to 2; end after 10 turns; }
+simulate 10 games of "Sin ganador" with 2 players;
+report { winrate; avg turns; }

@@ -1,1 +1,1 @@
-game "X" { board B cells -5; }
+game "X" { players 2 to 2; board cells -5; }

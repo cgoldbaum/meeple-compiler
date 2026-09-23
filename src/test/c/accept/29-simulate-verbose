@@ -1,0 +1,3 @@
+game "Ruidoso" { players 2 to 2; turn { log "turno {turns}"; } end after 3 turns; }
+simulate 1 game of "Ruidoso" with 2 players verbose;
+simulate 1 game of "Ruidoso" with 2 players seed 7 verbose;

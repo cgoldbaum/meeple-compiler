@@ -1,0 +1,1 @@
+game "X" { players 2 to 2; turn { log "hola {}"; } }

@@ -27,6 +27,9 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 
 static void _logTokenAction(const char * actionName, Token * token);
 
+/* Las acciones de interpolacion reusan la accion generica, definida mas abajo. */
+CompilationStatus TokenLexemeAction(TokenLabel label);
+
 /**
  * Logs a lexical-analyzer action over a token in DEBUGGING level.
  */
@@ -45,6 +48,16 @@ static void _logTokenAction(const char * actionName, Token * token) {
 }
 
 /* PUBLIC FUNCTIONS */
+
+/**
+ * Emite el STRING_HEAD de una cadena interpolada y entra al contexto de la
+ * interpolacion, donde se lexea la expresion que va entre llaves.
+ */
+CompilationStatus EnterInterpolationLexemeAction(TokenLabel label, FlexContext context) {
+	CompilationStatus status = TokenLexemeAction(label);
+	enterLexicalAnalyzerContext(_lexicalAnalyzer, context);
+	return status;
+}
 
 CompilationStatus EnterMultilineCommentLexemeAction(FlexContext context) {
 	if (_logIgnoredLexemes) {
@@ -105,6 +118,15 @@ CompilationStatus IntegerLexemeAction() {
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
 	return status;
+}
+
+/**
+ * Emite el STRING_TAIL de una cadena interpolada y vuelve al contexto en el que
+ * se abrio la cadena.
+ */
+CompilationStatus LeaveInterpolationLexemeAction(TokenLabel label) {
+	leaveLexicalAnalyzerContext(_lexicalAnalyzer);
+	return TokenLexemeAction(label);
 }
 
 CompilationStatus LeaveMultilineCommentLexemeAction() {

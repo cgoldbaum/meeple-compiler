@@ -1,0 +1,17 @@
+game "UNO" {
+	players 2 to 4;
+	cardtype Carta { string color; integer numero; }
+	deck Mano of Carta per player;
+	string colorActual = "rojo";
+	Carta ultimaJugada = none;
+	integer cartasJugadas = 0;
+	player ultimoEnJugar;
+	integer[] historial;
+	Carta[] descartadas;
+	decision color: string;
+	turn { cartasJugadas = cartasJugadas + 1; ultimoEnJugar = current; }
+	strategy Observador {
+		color: prefer max count(c in current.Mano where c.color == option)
+		       where option != colorActual;
+	}
+}

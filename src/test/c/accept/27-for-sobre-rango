@@ -1,0 +1,8 @@
+game "Rango" {
+	players 2 to 4;
+	prepare {
+		integer n = 3;
+		for (i in 1 to n) { give i to players[i - 1]; }
+		for (j in 0 to count(p in players) - 1) { give 1 to players[j]; }
+	}
+}

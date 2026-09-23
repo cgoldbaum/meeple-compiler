@@ -1,0 +1,8 @@
+game "Traza" {
+	players 2 to 2;
+	turn {
+		log "sin interpolaciones";
+		log "{current.name}";
+		log "{current.name} tiene {current.score + 1} puntos (turno {turns})";
+	}
+}

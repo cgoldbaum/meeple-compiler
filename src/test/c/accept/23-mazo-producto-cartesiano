@@ -1,0 +1,8 @@
+game "Truco" {
+	players {2, 4, 6};
+	cardtype Naipe { integer valor; string palo; }
+	deck Mazo of Naipe {
+		valor: 1 to 12;
+		palo: {"Copa", "Oro", "Basto", "Espada"};
+	}
+}

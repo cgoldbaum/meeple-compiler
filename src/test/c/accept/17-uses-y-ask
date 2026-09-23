@@ -2,9 +2,9 @@ game "Consulta" {
 	players 2 to 2;
 	cardtype Carta { integer ataque; }
 	deck Mano of Carta per player;
-	decision jugar(opciones: Carta[]) -> Carta;
+	decision jugar: Carta;
 	strategy Agresivo { jugar: prefer max option.ataque; }
 	strategy Azar { jugar: prefer random; }
-	setup { players[0] uses Agresivo; players[1] uses Azar; }
+	prepare { players[0] uses Agresivo; players[1] uses Azar; }
 	turn { Carta elegida = ask current for jugar(current.Mano); }
 }

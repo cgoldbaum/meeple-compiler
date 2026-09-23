@@ -1,0 +1,11 @@
+game "Duelo" {
+	players 2 to 2;
+	cardtype Carta { integer ataque; }
+	deck Mano of Carta per player;
+	piece token per player;
+	decision jugar: Carta;
+	decision mover: piece;
+	strategy Humano { jugar: prefer input; mover: prefer input; }
+	strategy Asistido { jugar: prefer max option.ataque, input; mover: prefer first; }
+}
+simulate 1 game of "Duelo" with 2 players verbose;

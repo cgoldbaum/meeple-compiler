@@ -1,0 +1,7 @@
+game "Fichas" {
+	players 2 to 2;
+	piece token per player;
+	decision mover: piece;
+	decision destino: integer;
+	strategy Primero { mover: prefer first; destino: prefer max option; }
+}

@@ -54,10 +54,16 @@ void yyerror(const YYLTYPE * location, const char * message) {
 %token IDENTIFIER
 %token STRING
 
+/**
+ * Partes de una cadena interpolada del log (§13.7 del plan): "texto{",
+ * "}texto{" y "}texto". Mismo criterio que STRING: sin tipo hasta el AST.
+ */
+%token STRING_HEAD STRING_MIDDLE STRING_TAIL
+
 /** Terminals: palabras clave (declaraciones). */
 %token <token> GAME GAMES PLAYERS BOARD CELLS DIE FACES TO PIECE PER PLAYER
-%token <token> DECK OF CARD CARDTYPE SETUP TURN ORDER CLOCKWISE COUNTERCLOCKWISE
-%token <token> DECISION STRATEGY PREFER FIRST RANDOM
+%token <token> DECK OF CARD CARDTYPE PREPARE TURN ORDER CLOCKWISE COUNTERCLOCKWISE
+%token <token> DECISION STRATEGY PREFER FIRST RANDOM INPUT
 
 /** Terminals: tipos clasicos. */
 %token <token> INTEGER_T BOOLEAN_T STRING_T
@@ -73,19 +79,18 @@ void yyerror(const YYLTYPE * location, const char * message) {
 
 /** Terminals: acciones del dominio. */
 %token <token> ROLL PLACE ON MOVE FORWARD SHUFFLE DRAW FROM PLAY GIVE TAKE LOG
-%token <token> LEVEL VERBOSE
 
 /** Terminals: condiciones de fin. */
 %token <token> WIN WHEN END AFTER TURNS
 
 /** Terminals: simulacion y reportes. */
-%token <token> SEED SIMULATE WITH REPORT WINRATE AVG
+%token <token> SEED SIMULATE VERBOSE WITH REPORT WINRATE AVG METRIC
 
 /** Terminals: variables predefinidas y literales del dominio. */
-%token <token> CURRENT TURN_NUMBER OPTION NONE TRUE FALSE
+%token <token> CURRENT OPTION NONE TRUE FALSE
 
 /** Terminals: operadores. */
-%token <token> AND OR NOT ARROW
+%token <token> AND OR NOT
 %token <token> EQ NE LE GE LT GT ADD SUB MUL DIV MOD
 
 /** Terminals: puntuacion. */
@@ -133,28 +138,52 @@ topLevelList: topLevel
 	| topLevelList topLevel
 	;
 
-topLevel: SEED INTEGER SEMI
-	| gameDeclaration
-	| SIMULATE INTEGER gameWord OF STRING WITH INTEGER PLAYERS SEMI
+topLevel: gameDeclaration
+	| simulation
 	| REPORT LBRACE reportItemList RBRACE
-	| LOG LEVEL logLevelValue SEMI
+	;
+
+/**
+ * La semilla y la verbosidad son clausulas de simulate (§13.4 del plan): ya no
+ * existen "seed n;" ni "log level ...;" sueltos. El orden es fijo.
+ */
+simulation: SIMULATE INTEGER gameWord OF STRING WITH INTEGER PLAYERS seedOpt verboseOpt SEMI
 	;
 
 gameWord: GAME
 	| GAMES
 	;
 
-logLevelValue: VERBOSE
-	| NONE
+seedOpt: %empty
+	| SEED INTEGER
+	;
+
+verboseOpt: %empty
+	| VERBOSE
 	;
 
 reportItemList: reportItem
 	| reportItemList reportItem
 	;
 
-reportItem: WINRATE BY PLAYER SEMI
+/**
+ * Lo que se puede reportar (§13.10 del plan): las tres formas de winrate, y un
+ * agregador sobre una metrica. "turns" es la metrica predefinida; el resto son
+ * los "metric" declarados en el juego.
+ */
+reportItem: WINRATE SEMI
+	| WINRATE BY PLAYER SEMI
 	| WINRATE BY STRATEGY SEMI
-	| AVG TURNS SEMI
+	| reportAggregator reportMetric SEMI
+	;
+
+reportAggregator: AVG
+	| MIN
+	| MAX
+	;
+
+reportMetric: TURNS
+	| IDENTIFIER
 	;
 
 /** Componentes del juego (§4.2). */
@@ -166,21 +195,39 @@ gameItemList: gameItem
 	| gameItemList gameItem
 	;
 
-gameItem: PLAYERS INTEGER TO INTEGER SEMI
-	| BOARD IDENTIFIER CELLS INTEGER SEMI
-	| DIE IDENTIFIER FACES signedInteger TO signedInteger SEMI
-	| DIE IDENTIFIER FACES LBRACE integerList RBRACE SEMI
+gameItem: PLAYERS playerCount SEMI
+	| BOARD CELLS INTEGER SEMI
+	| DIE IDENTIFIER FACES integerSet SEMI
 	| PIECE IDENTIFIER perPlayerOpt SEMI
 	| CARDTYPE IDENTIFIER LBRACE fieldList RBRACE
 	| DECK IDENTIFIER OF IDENTIFIER perPlayerOpt SEMI
-	| DECK IDENTIFIER OF IDENTIFIER LBRACE cardList RBRACE
-	| DECISION IDENTIFIER LPAREN parameterList RPAREN ARROW typeSpec SEMI
+	| DECK IDENTIFIER OF IDENTIFIER LBRACE deckBody RBRACE
+	| gameVariable
+	| METRIC IDENTIFIER ASSIGN expression SEMI
+	| DECISION IDENTIFIER COLON typeSpec SEMI
 	| STRATEGY IDENTIFIER LBRACE policyList RBRACE
-	| SETUP block
+	| PREPARE block
 	| TURN block
 	| TURN ORDER turnOrderValue SEMI
 	| WIN WHEN expression SEMI
 	| END AFTER INTEGER TURNS SEMI
+	;
+
+/**
+ * Variables del juego (§13.9 del plan). Los tipos se limitan a los que no
+ * abren otra declaracion del juego: con "piece", "die" o "deck", la entrada
+ * "piece p;" seria a la vez una variable y una ficha (conflicto R/R).
+ */
+gameVariable: gameVariableType IDENTIFIER initializerOpt SEMI
+	| gameVariableType LBRACKET RBRACKET IDENTIFIER initializerOpt SEMI
+	| IDENTIFIER IDENTIFIER initializerOpt SEMI
+	| IDENTIFIER LBRACKET RBRACKET IDENTIFIER initializerOpt SEMI
+	;
+
+gameVariableType: INTEGER_T
+	| BOOLEAN_T
+	| STRING_T
+	| PLAYER
 	;
 
 turnOrderValue: CLOCKWISE
@@ -192,10 +239,25 @@ perPlayerOpt: %empty
 	;
 
 /**
- * Los negativos con signo solo se admiten en "die ... faces", que es el unico
- * lugar donde el PDF los muestra. En el resto de las declaraciones se exige
- * INTEGER pelado, lo que regala dos rechazos: "seed -1;" y "cells -5;".
+ * Conjuntos de valores (§13.1 del plan): "A to B" abrevia {A, A+1, ..., B}, y
+ * donde se acepta un rango tambien se acepta un conjunto. Nunca vacio.
+ *
+ * Los negativos solo se admiten en "die ... faces" y en los generadores de
+ * mazo. En el resto de las declaraciones se exige INTEGER pelado, lo que
+ * regala dos rechazos: "seed -1" y "cells -5".
  */
+playerCount: INTEGER TO INTEGER
+	| LBRACE naturalList RBRACE
+	;
+
+naturalList: INTEGER
+	| naturalList COMMA INTEGER
+	;
+
+integerSet: signedInteger TO signedInteger
+	| LBRACE integerList RBRACE
+	;
+
 integerList: signedInteger
 	| integerList COMMA signedInteger
 	;
@@ -211,11 +273,26 @@ fieldList: field
 field: typeSpec IDENTIFIER SEMI
 	;
 
+/**
+ * El cuerpo de un mazo es una lista de cartas O una lista de generadores, sin
+ * mezclar (§13.2 del plan). Los generadores arman el producto cartesiano de
+ * sus conjuntos de valores.
+ */
+deckBody: cardList
+	| generatorList
+	;
+
 cardList: card
 	| cardList card
 	;
 
+/**
+ * Carta con nombres ("card { ataque: 1; }") o posicional ("card {1, 1}"). LALR
+ * decide con el token que sigue al primer IDENTIFIER: ":" abre la forma con
+ * nombres.
+ */
 card: CARD LBRACE cardFieldList RBRACE
+	| CARD LBRACE argumentList RBRACE
 	;
 
 cardFieldList: cardField
@@ -225,26 +302,58 @@ cardFieldList: cardField
 cardField: IDENTIFIER COLON expression SEMI
 	;
 
+generatorList: generator
+	| generatorList generator
+	;
+
+generator: IDENTIFIER COLON valueSet SEMI
+	;
+
+valueSet: signedInteger TO signedInteger
+	| LBRACE literalList RBRACE
+	;
+
+literalList: literal
+	| literalList COMMA literal
+	;
+
+literal: signedInteger
+	| STRING
+	| TRUE
+	| FALSE
+	;
+
 /** Decisiones y estrategias (§4.6). */
-
-parameterList: parameter
-	| parameterList COMMA parameter
-	;
-
-parameter: IDENTIFIER COLON typeSpec
-	;
 
 policyList: policy
 	| policyList policy
 	;
 
-policy: IDENTIFIER COLON PREFER policyBody SEMI
+/**
+ * Politicas (§13.8 del plan): criterios encadenados con coma, donde cada uno
+ * desempata al anterior, y un filtro "where" opcional. Los criterios que no
+ * ordenan (random, first, input) solo pueden ir al final: despues de ellos no
+ * queda nada que desempatar. Lo garantiza la gramatica.
+ */
+policy: IDENTIFIER COLON PREFER criteria whereOpt SEMI
 	;
 
-policyBody: MAX expression
+criteria: rankingList
+	| rankingList COMMA finalCriterion
+	| finalCriterion
+	;
+
+rankingList: ranking
+	| rankingList COMMA ranking
+	;
+
+ranking: MAX expression
 	| MIN expression
-	| RANDOM
+	;
+
+finalCriterion: RANDOM
 	| FIRST
+	| INPUT
 	;
 
 typeSpec: baseType
@@ -255,7 +364,6 @@ baseType: INTEGER_T
 	| BOOLEAN_T
 	| STRING_T
 	| PLAYER
-	| BOARD
 	| PIECE
 	| DIE
 	| DECK
@@ -280,6 +388,7 @@ statement: identStatement
 	| WHILE LPAREN expression RPAREN block
 	| REPEAT expression block
 	| FOR LPAREN IDENTIFIER IN expression RPAREN block
+	| FOR LPAREN IDENTIFIER IN expression TO expression RPAREN block
 	| actionStatement
 	| block
 	;
@@ -318,7 +427,6 @@ globalStatement: globalName lvalueTail lvalueEnd
 
 globalName: CURRENT
 	| PLAYERS
-	| TURN_NUMBER
 	| OPTION
 	;
 
@@ -330,7 +438,6 @@ keywordType: INTEGER_T
 	| BOOLEAN_T
 	| STRING_T
 	| PLAYER
-	| BOARD
 	| PIECE
 	| DIE
 	| DECK
@@ -362,11 +469,20 @@ actionStatement: PLACE postfix ON expression SEMI
 	| PLAY expression FROM postfix TO postfix SEMI
 	| GIVE expression TO postfix SEMI
 	| TAKE expression FROM postfix SEMI
-	| LOG STRING logArgumentsOpt SEMI
+	| LOG interpolatedString SEMI
 	;
 
-logArgumentsOpt: %empty
-	| logArgumentsOpt COMMA expression
+/**
+ * Cadena del log, con interpolaciones "{expr}" (§13.7 del plan). El lexer ya
+ * la parte en STRING_HEAD, STRING_MIDDLE y STRING_TAIL. Una interpolacion
+ * vacia ("{}") o sin cerrar es un error de sintaxis.
+ */
+interpolatedString: STRING
+	| STRING_HEAD expression interpolationRest
+	;
+
+interpolationRest: STRING_TAIL
+	| STRING_MIDDLE expression interpolationRest
 	;
 
 /** Expresiones y agregaciones (§4.3). */
@@ -424,8 +540,9 @@ primary: INTEGER
 	| IDENTIFIER
 	| CURRENT
 	| PLAYERS
-	| TURN_NUMBER
+	| TURNS
 	| OPTION
+	| BOARD
 	| LPAREN expression RPAREN
 	| ROLL IDENTIFIER
 	| ASK expression FOR IDENTIFIER LPAREN argumentListOpt RPAREN

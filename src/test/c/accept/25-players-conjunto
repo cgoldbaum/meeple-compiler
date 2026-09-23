@@ -1,0 +1,1 @@
+game "Truco" { players {2, 4, 6}; die Fudge faces {-1, 0, 1}; }

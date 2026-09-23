@@ -1,0 +1,12 @@
+game "Desempate" {
+	players 2 to 2;
+	cardtype Carta { integer ataque; integer costo; }
+	deck Mano of Carta per player;
+	decision jugar: Carta;
+	strategy Agresivo {
+		jugar: prefer max option.ataque, min option.costo
+		       where option.costo <= current.score;
+	}
+	strategy Prudente { jugar: prefer min option.costo, random; }
+	strategy Pasivo { jugar: prefer first where option.costo == 0; }
+}

@@ -1,1 +1,1 @@
-game "For" { players 2 to 4; setup { for (p in players) { give 5 to p; } } }
+game "For" { players 2 to 4; prepare { for (p in players) { give 5 to p; } } }

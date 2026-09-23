@@ -1,0 +1,6 @@
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	decision jugar: Carta;
+	strategy S { jugar: prefer random, max option.v; }
+}

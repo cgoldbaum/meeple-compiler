@@ -1,1 +1,0 @@
-game "Traza" { players 2 to 2; turn { log "{1} tiene {2} puntos", current, current.score; } }
