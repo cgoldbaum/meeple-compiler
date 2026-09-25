@@ -1,0 +1,2 @@
+// PDF §5.2 caso 3: min > max.
+game "X" { players 9 to 2; }

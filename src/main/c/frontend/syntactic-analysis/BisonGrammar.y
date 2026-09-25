@@ -307,7 +307,13 @@ perPlayerOpt: %empty													{ $$ = false; }
  * mazo. En el resto de las declaraciones se exige INTEGER pelado, lo que
  * regala dos rechazos: "seed -1" y "cells -5".
  */
-playerCount: INTEGER TO INTEGER											{ $$ = RangeValueSetSemanticAction($1, $3); }
+playerCount: INTEGER TO INTEGER											{
+		if ($1 > $3) {
+			yyerror(&@1, "rango invalido: min > max");
+			YYERROR;
+		}
+		$$ = RangeValueSetSemanticAction($1, $3);
+	}
 	| LBRACE naturalList RBRACE											{ $$ = SetValueSetSemanticAction($2); }
 	;
 
@@ -315,7 +321,13 @@ naturalList: INTEGER													{ $$ = IntegerLiteralSemanticAction($1); }
 	| naturalList COMMA INTEGER											{ $$ = LiteralListSemanticAction($1, IntegerLiteralSemanticAction($3)); }
 	;
 
-integerSet: signedInteger TO signedInteger								{ $$ = RangeValueSetSemanticAction($1, $3); }
+integerSet: signedInteger TO signedInteger								{
+		if ($1 > $3) {
+			yyerror(&@1, "rango invalido: min > max");
+			YYERROR;
+		}
+		$$ = RangeValueSetSemanticAction($1, $3);
+	}
 	| LBRACE integerList RBRACE											{ $$ = SetValueSetSemanticAction($2); }
 	;
 
@@ -370,7 +382,13 @@ generatorList: generator												{ $$ = $1; }
 generator: IDENTIFIER COLON valueSet SEMI								{ $$ = GeneratorSemanticAction($1, $3); }
 	;
 
-valueSet: signedInteger TO signedInteger								{ $$ = RangeValueSetSemanticAction($1, $3); }
+valueSet: signedInteger TO signedInteger								{
+		if ($1 > $3) {
+			yyerror(&@1, "rango invalido: min > max");
+			YYERROR;
+		}
+		$$ = RangeValueSetSemanticAction($1, $3);
+	}
 	| LBRACE literalList RBRACE											{ $$ = SetValueSetSemanticAction($2); }
 	;
 

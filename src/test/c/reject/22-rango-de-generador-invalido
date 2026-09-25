@@ -1,0 +1,5 @@
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer valor; }
+	deck Mazo of Carta { valor: 12 to 1; }
+}
