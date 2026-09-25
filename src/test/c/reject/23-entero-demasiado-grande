@@ -1,0 +1,2 @@
+game "X" { players 2 to 2; }
+simulate 1 game of "X" with 2 players seed 2147483648;
