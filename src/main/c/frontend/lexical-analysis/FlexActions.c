@@ -28,7 +28,7 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 static void _logTokenAction(const char * actionName, Token * token);
 
 /* Las acciones de interpolacion reusan la accion generica, definida mas abajo. */
-CompilationStatus TokenLexemeAction(TokenLabel label);
+CompilationStatus StringLexemeAction(TokenLabel label);
 
 /**
  * Logs a lexical-analyzer action over a token in DEBUGGING level.
@@ -54,7 +54,7 @@ static void _logTokenAction(const char * actionName, Token * token) {
  * interpolacion, donde se lexea la expresion que va entre llaves.
  */
 CompilationStatus EnterInterpolationLexemeAction(TokenLabel label, FlexContext context) {
-	CompilationStatus status = TokenLexemeAction(label);
+	CompilationStatus status = StringLexemeAction(label);
 	enterLexicalAnalyzerContext(_lexicalAnalyzer, context);
 	return status;
 }
@@ -126,7 +126,7 @@ CompilationStatus IntegerLexemeAction() {
  */
 CompilationStatus LeaveInterpolationLexemeAction(TokenLabel label) {
 	leaveLexicalAnalyzerContext(_lexicalAnalyzer);
-	return TokenLexemeAction(label);
+	return StringLexemeAction(label);
 }
 
 CompilationStatus LeaveMultilineCommentLexemeAction() {
@@ -144,8 +144,8 @@ CompilationStatus LeaveMultilineCommentLexemeAction() {
  * matcheo Flex es "\"...\"", de largo token->length, asi que el contenido
  * arranca en lexeme+1 y mide token->length-2.
  */
-CompilationStatus StringLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, STRING);
+CompilationStatus StringLexemeAction(TokenLabel label) {
+	Token * token = createToken(_lexicalAnalyzer, label);
 	token->semanticValue->string = strndup(token->lexeme + 1, token->length - 2);
 	if (token->semanticValue->string == NULL) {
 		destroyToken(token);
@@ -174,6 +174,7 @@ CompilationStatus TokenLexemeAction(TokenLabel label) {
 CompilationStatus UnknownLexemeAction() {
 	Token * token = createToken(_lexicalAnalyzer, UNKNOWN);
 	_logTokenAction(__FUNCTION__, token);
+	pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
 	return FAILED;
 }

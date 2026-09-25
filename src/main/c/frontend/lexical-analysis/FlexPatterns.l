@@ -22,7 +22,7 @@ extern CompilationStatus IgnoredLexemeAction();
 extern CompilationStatus IntegerLexemeAction();
 extern CompilationStatus LeaveInterpolationLexemeAction(TokenLabel label);
 extern CompilationStatus LeaveMultilineCommentLexemeAction();
-extern CompilationStatus StringLexemeAction();
+extern CompilationStatus StringLexemeAction(TokenLabel label);
 extern CompilationStatus TokenLexemeAction(TokenLabel label);
 extern CompilationStatus UnknownLexemeAction();
 
@@ -234,7 +234,7 @@ stringText			[^\"{}\n]*
 	 */
 
 [[:digit:]]+						{ return IntegerLexemeAction(); }
-\"{stringText}\"					{ return TokenLexemeAction(STRING); }
+\"{stringText}\"					{ return StringLexemeAction(STRING); }
 
 	/*
 	 * Cadenas interpoladas del log (template strings). Una cadena con "{" se
@@ -249,12 +249,12 @@ stringText			[^\"{}\n]*
 	 */
 
 \"{stringText}\{					{ return EnterInterpolationLexemeAction(STRING_HEAD, INTERPOLATION); }
-<INTERPOLATION>\}{stringText}\{		{ return TokenLexemeAction(STRING_MIDDLE); }
+<INTERPOLATION>\}{stringText}\{		{ return StringLexemeAction(STRING_MIDDLE); }
 <INTERPOLATION>\}{stringText}\"		{ return LeaveInterpolationLexemeAction(STRING_TAIL); }
 
 	/* IDENTIFIER va al final de todo: es el unico que empata con las keywords. */
 
-[[:alpha:]_][[:alnum:]_]*			{ return TokenLexemeAction(IDENTIFIER); }
+[[:alpha:]_][[:alnum:]_]*			{ return IdentifierLexemeAction(); }
 
 {whitespace}						{ return IgnoredLexemeAction(); }
 .									{ return UnknownLexemeAction(); }
