@@ -1,0 +1,3 @@
+// 4 esta en {2, 4, 6}, asi que el simulate se acepta.
+game "Truco" { players {2, 4, 6}; end after 20 turns; }
+simulate 100 games of "Truco" with 4 players seed 3;

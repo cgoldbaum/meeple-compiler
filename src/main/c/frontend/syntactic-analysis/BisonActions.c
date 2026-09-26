@@ -109,6 +109,11 @@ TopLevel * SimulationTopLevelSemanticAction(Simulation * simulation, const int l
 	return topLevel;
 }
 
+/**
+ * seed vale -1 cuando la simulacion no tiene clausula "seed" (ver seedOpt en
+ * BisonGrammar.y). Como INTEGER nunca es negativo, -1 no choca con una semilla
+ * real. En el AST eso se traduce a hasSeed = false.
+ */
 Simulation * SimulationSemanticAction(const int games, char * gameName, const int players, const int seed, const bool verbose) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Simulation * simulation = calloc(1, sizeof(Simulation));
@@ -483,6 +488,17 @@ Statement * LoopStatementSemanticAction(const StatementType type, Expression * c
 	return statement;
 }
 
+/**
+ * Arma el target de una asignacion o de un "uses" y lo engancha en el
+ * statement que ya construyo lvalueEnd (que se crea sin target y con linea 0).
+ *
+ * lvalueTail se reduce antes de conocer la base del lvalue, asi que su nodo mas
+ * interno (el primer ".campo" o "[i]" despues de la base) queda con
+ * postfix.object = NULL. Aca se baja por la cadena de postfix.object hasta ese
+ * NULL y se completa con la base. Por ejemplo, en "Mazo[0].valor" el tail llega
+ * como Member(Index(NULL, 0), valor) y termina como Member(Index(Mazo, 0), valor).
+ * Sin tail, el target es directamente la base.
+ */
 Statement * LvalueStatementSemanticAction(Expression * base, Expression * tail, Statement * end, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * target = base;
@@ -499,6 +515,11 @@ Statement * LvalueStatementSemanticAction(Expression * base, Expression * tail, 
 	return end;
 }
 
+/**
+ * "jugador uses Estrategia;" no tiene struct propio: reusa el struct assignment
+ * del Statement, con target (el jugador, que completa LvalueStatementSemanticAction)
+ * y strategy. El campo value queda en NULL.
+ */
 Statement * UsesStatementSemanticAction(char * strategy) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Statement * statement = _createStatement(USES_STATEMENT, 0);

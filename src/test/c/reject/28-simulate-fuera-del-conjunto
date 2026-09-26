@@ -1,0 +1,3 @@
+// Caso 10 sobre un conjunto en vez de un rango: 3 no esta en {2, 4, 6}.
+game "Truco" { players {2, 4, 6}; }
+simulate 10 games of "Truco" with 3 players;

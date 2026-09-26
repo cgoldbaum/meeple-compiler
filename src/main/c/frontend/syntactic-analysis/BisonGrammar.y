@@ -213,6 +213,7 @@ gameWord: GAME
 	| GAMES
 	;
 
+/* -1 significa "sin seed": INTEGER no puede ser negativo, asi que no se confunde. */
 seedOpt: %empty															{ $$ = -1; }
 	| SEED INTEGER														{ $$ = $2; }
 	;
@@ -241,6 +242,7 @@ reportAggregator: AVG													{ $$ = AVG_REPORT_AGGREGATOR; }
 	| MAX																{ $$ = MAX_REPORT_AGGREGATOR; }
 	;
 
+/* NULL representa la metrica predefinida "turns". */
 reportMetric: TURNS														{ $$ = NULL; }
 	| IDENTIFIER														{ $$ = $1; }
 	;
@@ -291,6 +293,7 @@ gameVariableType: INTEGER_T												{ $$ = INTEGER_TYPE; }
 	| PLAYER															{ $$ = PLAYER_TYPE; }
 	;
 
+/* true es clockwise; false, counterclockwise. */
 turnOrderValue: CLOCKWISE												{ $$ = true; }
 	| COUNTERCLOCKWISE													{ $$ = false; }
 	;
