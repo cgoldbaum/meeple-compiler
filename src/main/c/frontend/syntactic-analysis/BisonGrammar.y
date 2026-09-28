@@ -91,42 +91,63 @@ void yyerror(const YYLTYPE * location, const char * message) {
  */
 %token <string> STRING_HEAD STRING_MIDDLE STRING_TAIL
 
+/**
+ * Cada keyword y simbolo lleva como alias su lexema: es lo que muestran los
+ * errores de sintaxis ("unexpected '}', expecting ';'" en vez de "unexpected
+ * RBRACE, expecting SEMI"). La gramatica sigue usando los nombres.
+ */
+
 /** Terminals: palabras clave (declaraciones). */
-%token <token> GAME GAMES PLAYERS BOARD CELLS DIE FACES TO PIECE PER PLAYER
-%token <token> DECK OF CARD CARDTYPE PREPARE TURN ORDER CLOCKWISE COUNTERCLOCKWISE
-%token <token> DECISION STRATEGY PREFER FIRST RANDOM INPUT
+%token <token> GAME "'game'" GAMES "'games'" PLAYERS "'players'" BOARD "'board'"
+%token <token> CELLS "'cells'" DIE "'die'" FACES "'faces'" TO "'to'"
+%token <token> PIECE "'piece'" PER "'per'" PLAYER "'player'"
+%token <token> DECK "'deck'" OF "'of'" CARD "'card'" CARDTYPE "'cardtype'"
+%token <token> PREPARE "'prepare'" TURN "'turn'" ORDER "'order'"
+%token <token> CLOCKWISE "'clockwise'" COUNTERCLOCKWISE "'counterclockwise'"
+%token <token> DECISION "'decision'" STRATEGY "'strategy'" PREFER "'prefer'"
+%token <token> FIRST "'first'" RANDOM "'random'" INPUT "'input'"
 
 /** Terminals: tipos clasicos. */
-%token <token> INTEGER_T BOOLEAN_T STRING_T
+%token <token> INTEGER_T "'integer'" BOOLEAN_T "'boolean'" STRING_T "'string'"
 
 /** Terminals: agregaciones. */
-%token <token> MAX MIN SUM COUNT SELECT WHERE BY IN
+%token <token> MAX "'max'" MIN "'min'" SUM "'sum'" COUNT "'count'"
+%token <token> SELECT "'select'" WHERE "'where'" BY "'by'" IN "'in'"
 
 /** Terminals: decisiones. */
-%token <token> ASK FOR USES
+%token <token> ASK "'ask'" FOR "'for'" USES "'uses'"
 
 /** Terminals: control de flujo. */
-%token <token> IF ELSE WHILE REPEAT
+%token <token> IF "'if'" ELSE "'else'" WHILE "'while'" REPEAT "'repeat'"
 
 /** Terminals: acciones del dominio. */
-%token <token> ROLL PLACE ON MOVE FORWARD SHUFFLE DRAW FROM PLAY GIVE TAKE LOG
+%token <token> ROLL "'roll'" PLACE "'place'" ON "'on'" MOVE "'move'"
+%token <token> FORWARD "'forward'" SHUFFLE "'shuffle'" DRAW "'draw'"
+%token <token> FROM "'from'" PLAY "'play'" GIVE "'give'" TAKE "'take'"
+%token <token> LOG "'log'"
 
 /** Terminals: condiciones de fin. */
-%token <token> WIN WHEN END AFTER TURNS
+%token <token> WIN "'win'" WHEN "'when'" END "'end'" AFTER "'after'"
+%token <token> TURNS "'turns'"
 
 /** Terminals: simulacion y reportes. */
-%token <token> SEED SIMULATE VERBOSE WITH REPORT WINRATE AVG METRIC
+%token <token> SEED "'seed'" SIMULATE "'simulate'" VERBOSE "'verbose'"
+%token <token> WITH "'with'" REPORT "'report'" WINRATE "'winrate'" AVG "'avg'"
+%token <token> METRIC "'metric'"
 
 /** Terminals: variables predefinidas y literales del dominio. */
-%token <token> CURRENT OPTION NONE TRUE FALSE
+%token <token> CURRENT "'current'" OPTION "'option'" NONE "'none'" TRUE "'true'"
+%token <token> FALSE "'false'"
 
 /** Terminals: operadores. */
-%token <token> AND OR NOT
-%token <token> EQ NE LE GE LT GT ADD SUB MUL DIV MOD
+%token <token> AND "'and'" OR "'or'" NOT "'not'"
+%token <token> EQ "'=='" NE "'!='" LE "'<='" GE "'>='" LT "'<'" GT "'>'"
+%token <token> ADD "'+'" SUB "'-'" MUL "'*'" DIV "'/'" MOD "'%'"
 
 /** Terminals: puntuacion. */
-%token <token> ASSIGN SEMI COMMA COLON DOT
-%token <token> LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
+%token <token> ASSIGN "'='" SEMI "';'" COMMA "','" COLON "':'" DOT "'.'"
+%token <token> LBRACE "'{'" RBRACE "'}'" LPAREN "'('" RPAREN "')'"
+%token <token> LBRACKET "'['" RBRACKET "']'"
 
 /** Terminals: infraestructura (no forman parte del alfabeto del lenguaje). */
 %token <token> OPEN_COMMENT

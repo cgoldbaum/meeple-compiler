@@ -31,6 +31,9 @@ void destroyCard(Card * card) {
 			case POSITIONAL_CARD:
 				destroyExpressionList(card->values);
 				break;
+			default:
+				logError(_logger, "The specified card type is unknown: %d", card->type);
+				break;
 		}
 		free(card);
 		card = next;
@@ -71,6 +74,9 @@ void destroyDeckDeclaration(DeckDeclaration * deckDeclaration) {
 				break;
 			case GENERATORS_DECK_BODY:
 				destroyGenerator(deckDeclaration->generators);
+				break;
+			default:
+				logError(_logger, "The specified deck body type is unknown: %d", deckDeclaration->bodyType);
 				break;
 		}
 		free(deckDeclaration);
@@ -141,6 +147,9 @@ void destroyExpression(Expression * expression) {
 			case OPTION_EXPRESSION:
 			case PLAYERS_EXPRESSION:
 			case TURNS_EXPRESSION:
+				break;
+			default:
+				logError(_logger, "The specified expression type is unknown: %d", expression->type);
 				break;
 		}
 		free(expression);
@@ -225,6 +234,9 @@ void destroyGameItem(GameItem * gameItem) {
 			case WIN_ITEM:
 				destroyExpression(gameItem->condition);
 				break;
+			default:
+				logError(_logger, "The specified game item type is unknown: %d", gameItem->type);
+				break;
 		}
 		free(gameItem);
 		gameItem = next;
@@ -264,6 +276,9 @@ void destroyLogPart(LogPart * logPart) {
 				break;
 			case TEXT_LOG_PART:
 				free(logPart->text);
+				break;
+			default:
+				logError(_logger, "The specified log part type is unknown: %d", logPart->type);
 				break;
 		}
 		free(logPart);
@@ -359,6 +374,9 @@ void destroyStatement(Statement * statement) {
 				destroyExpression(statement->action.source);
 				destroyExpression(statement->action.target);
 				break;
+			default:
+				logError(_logger, "The specified statement type is unknown: %d", statement->type);
+				break;
 		}
 		free(statement);
 		statement = next;
@@ -378,6 +396,9 @@ void destroyTopLevel(TopLevel * topLevel) {
 				break;
 			case SIMULATION_TOP_LEVEL:
 				destroySimulation(topLevel->simulation);
+				break;
+			default:
+				logError(_logger, "The specified top level type is unknown: %d", topLevel->type);
 				break;
 		}
 		free(topLevel);

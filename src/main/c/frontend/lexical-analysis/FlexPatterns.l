@@ -31,6 +31,9 @@ extern CompilationStatus UnknownLexemeAction();
 /**
  * Flex contexts (a.k.a. start conditions).
  *
+ * Flex los numera en orden de declaracion (INITIAL = 0): si se agrega o se
+ * reordena uno, actualizar _toContextString en FlexActions.c.
+ *
  * @see https://westes.github.io/flex/manual/Start-Conditions.html
  */
 %x MULTILINE_COMMENT

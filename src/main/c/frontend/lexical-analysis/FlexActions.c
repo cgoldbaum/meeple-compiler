@@ -30,6 +30,7 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 /* PRIVATE FUNCTIONS */
 
 static void _logTokenAction(const char * actionName, Token * token);
+static const char * _toContextString(const FlexContext context);
 
 /*
  * Enter/LeaveInterpolationLexemeAction reusan StringLexemeAction, que esta
@@ -39,13 +40,28 @@ static void _logTokenAction(const char * actionName, Token * token);
 CompilationStatus StringLexemeAction(TokenLabel label);
 
 /**
+ * Get the context string of the specified Flex context. Los numeros salen del
+ * orden de declaracion de los contextos en FlexPatterns.l.
+ */
+static const char * _toContextString(const FlexContext context) {
+	switch (context) {
+		case 0: return "INITIAL";
+		case 1: return "MULTILINE_COMMENT";
+		case 2: return "INTERPOLATION";
+		default:
+			logError(_logger, "The specified Flex context is unknown: %d", context);
+			return "<UNKNOWN CONTEXT>";
+	}
+}
+
+/**
  * Logs a lexical-analyzer action over a token in DEBUGGING level.
  */
 static void _logTokenAction(const char * actionName, Token * token) {
 	char * _lexeme = escape(token->lexeme);
-	logDebugging(_logger, WARNING_COLOR "%s" DEFAULT_COLOR ": Token(context=%d, label=%d, length=%d, lexeme=%s\"%s\"%s, line=%d, semanticValue=%p)",
+	logDebugging(_logger, WARNING_COLOR "%s" DEFAULT_COLOR ": Token(context=%s, label=%d, length=%d, lexeme=%s\"%s\"%s, line=%d, semanticValue=%p)",
 		actionName,
-		token->context,
+		_toContextString(token->context),
 		token->label,
 		token->length,
 		INFORMATION_COLOR, _lexeme, DEFAULT_COLOR,
@@ -84,8 +100,8 @@ CompilationStatus EOFLexemeAction() {
 	if (!popInputBuffer(_lexicalAnalyzer)) {
 		status = pushToken(_lexicalAnalyzer, token);
 		FlexContext context = currentLexicalAnalyzerContext(_lexicalAnalyzer);
-		if (0 < context) {
-			logError(_logger, "The final context is not closed (context=%d).", context);
+		if (0 != context) {
+			logError(_logger, "The final context is not closed (context=%s).", _toContextString(context));
 			status = FAILED;
 		}
 	}
@@ -125,6 +141,13 @@ CompilationStatus IntegerLexemeAction() {
 	long value = strtol(token->lexeme, NULL, 10);
 	if (errno == ERANGE || value > INT_MAX) {
 		logError(_logger, "Integer literal is out of range: \"%s\".", token->lexeme);
+		/*
+		 * Se empuja como UNKNOWN para que el parser aborte y libere su pila con
+		 * los %destructor. Si solo se devolviera FAILED, lo que el parser ya
+		 * construyo se perderia: yypstate_delete no corre los destructores.
+		 */
+		token->label = UNKNOWN;
+		pushToken(_lexicalAnalyzer, token);
 		destroyToken(token);
 		return FAILED;
 	}

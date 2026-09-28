@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Pull repository."
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
       - name: "Install."
@@ -29,8 +29,4 @@ name: "CI"
 
 # @see https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
-  pull_request:
-    types:
-      - closed
-      - reopened
   push:
