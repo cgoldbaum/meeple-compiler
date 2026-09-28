@@ -1,0 +1,4 @@
+// PDF §5.2 caso 10, otra mitad: el simulate nombra un game que no existe.
+// El nombre se busca en todo el programa, no solo en lo declarado antes.
+game "La Oca" { players 2 to 4; }
+simulate 10 games of "La Ocra" with 4 players;

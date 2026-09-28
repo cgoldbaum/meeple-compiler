@@ -1,0 +1,9 @@
+// Companero del caso 8: la politica nombra una decision que el game no declara
+// ("jugra" en vez de "jugar"). Sin este chequeo el unico error reportado seria
+// que la strategy no resuelve "jugar", que oculta el nombre mal escrito.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	decision jugar: Carta;
+	strategy Confundida { jugra: prefer max option.v; }
+}

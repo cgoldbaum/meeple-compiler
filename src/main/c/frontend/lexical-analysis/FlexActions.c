@@ -31,7 +31,11 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 
 static void _logTokenAction(const char * actionName, Token * token);
 
-/* Las acciones de interpolacion reusan la accion generica, definida mas abajo. */
+/*
+ * Enter/LeaveInterpolationLexemeAction reusan StringLexemeAction, que esta
+ * definida mas abajo y no se declara en FlexActions.h (FlexPatterns.l la
+ * declara extern).
+ */
 CompilationStatus StringLexemeAction(TokenLabel label);
 
 /**
@@ -151,9 +155,16 @@ CompilationStatus LeaveMultilineCommentLexemeAction() {
 }
 
 /**
- * Emite un STRING guardando el contenido *sin* las comillas. El lexema que
- * matcheo Flex es "\"...\"", de largo token->length, asi que el contenido
- * arranca en lexeme+1 y mide token->length-2.
+ * Emite un STRING, STRING_HEAD, STRING_MIDDLE o STRING_TAIL guardando el texto
+ * *sin* sus delimitadores. En los cuatro casos el lexema que matcheo Flex tiene
+ * exactamente un caracter delimitador de cada lado:
+ *
+ *   STRING         "texto"
+ *   STRING_HEAD    "texto{
+ *   STRING_MIDDLE  }texto{
+ *   STRING_TAIL    }texto"
+ *
+ * asi que el contenido arranca en lexeme+1 y mide token->length-2.
  */
 CompilationStatus StringLexemeAction(TokenLabel label) {
 	Token * token = createToken(_lexicalAnalyzer, label);

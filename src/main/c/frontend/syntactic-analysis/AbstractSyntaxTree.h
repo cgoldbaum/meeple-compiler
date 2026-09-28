@@ -227,6 +227,7 @@ enum StatementType {
 
 struct Statement {
 	union {
+		/* Lo usan ASSIGNMENT_STATEMENT (target y value) y USES_STATEMENT (target y strategy). */
 		struct {
 			Expression * target;
 			Expression * value;
@@ -400,6 +401,7 @@ struct GameItem {
 
 		Statement * block;
 
+		/* true es clockwise; false, counterclockwise. */
 		bool clockwise;
 
 		Expression * condition;
@@ -440,6 +442,7 @@ enum ReportAggregator {
 
 struct ReportItem {
 	ReportAggregator aggregator;
+	/* NULL significa la metrica predefinida "turns". */
 	char * metric;
 	ReportItemType type;
 	ReportItem * next;
