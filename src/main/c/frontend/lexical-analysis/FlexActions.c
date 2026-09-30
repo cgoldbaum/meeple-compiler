@@ -205,8 +205,8 @@ CompilationStatus StringLexemeAction(TokenLabel label) {
 /**
  * Accion generica para toda palabra clave y todo simbolo, es decir, para los
  * tokens que no acarrean valor semantico. Reemplaza a la familia de funciones
- * del proyecto base (ArithmeticOperator, Parenthesis, ...), que con 103 tokens
- * no escala.
+ * del proyecto base (ArithmeticOperator, Parenthesis, ...), que con un
+ * centenar de tokens no escala.
  */
 CompilationStatus TokenLexemeAction(TokenLabel label) {
 	Token * token = createToken(_lexicalAnalyzer, label);

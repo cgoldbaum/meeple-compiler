@@ -86,8 +86,8 @@ void yyerror(const YYLTYPE * location, const char * message) {
 %token <string> STRING
 
 /**
- * Partes de una cadena interpolada del log (§13.7 del plan): "texto{",
- * "}texto{" y "}texto".
+ * Partes de una cadena interpolada del log (devolucion del Stage I):
+ * "texto{", "}texto{" y "}texto".
  */
 %token <string> STRING_HEAD STRING_MIDDLE STRING_TAIL
 
@@ -223,8 +223,9 @@ topLevel: gameDeclaration												{ $$ = GameTopLevelSemanticAction($1, @1.fi
 	;
 
 /**
- * La semilla y la verbosidad son clausulas de simulate (§13.4 del plan): ya no
- * existen "seed n;" ni "log level ...;" sueltos. El orden es fijo.
+ * La semilla y la verbosidad son clausulas de simulate (devolucion del
+ * Stage I): ya no existen "seed n;" ni "log level ...;" sueltos. El orden es
+ * fijo.
  */
 simulation: SIMULATE INTEGER gameWord OF STRING WITH INTEGER PLAYERS seedOpt verboseOpt SEMI
 																		{ $$ = SimulationSemanticAction($2, $5, $7, $9, $10); }
@@ -248,9 +249,9 @@ reportItemList: reportItem												{ $$ = $1; }
 	;
 
 /**
- * Lo que se puede reportar (§13.10 del plan): las tres formas de winrate, y un
- * agregador sobre una metrica. "turns" es la metrica predefinida; el resto son
- * los "metric" declarados en el juego.
+ * Lo que se puede reportar (devolucion del Stage I): las tres formas de
+ * winrate, y un agregador sobre una metrica. "turns" es la metrica
+ * predefinida; el resto son los "metric" declarados en el juego.
  */
 reportItem: WINRATE SEMI												{ $$ = WinrateReportItemSemanticAction(WINRATE_REPORT_ITEM); }
 	| WINRATE BY PLAYER SEMI											{ $$ = WinrateReportItemSemanticAction(WINRATE_BY_PLAYER_REPORT_ITEM); }
@@ -296,8 +297,8 @@ gameItem: PLAYERS playerCount SEMI										{ $$ = PlayersGameItemSemanticAction
 	;
 
 /**
- * Variables del juego (§13.9 del plan). Los tipos se limitan a los que no
- * abren otra declaracion del juego: con "piece", "die" o "deck", la entrada
+ * Variables del juego (devolucion del Stage I). Los tipos se limitan a los que
+ * no abren otra declaracion del juego: con "piece", "die" o "deck", la entrada
  * "piece p;" seria a la vez una variable y una ficha (conflicto R/R).
  */
 gameVariable: gameVariableType IDENTIFIER initializerOpt SEMI
@@ -324,8 +325,9 @@ perPlayerOpt: %empty													{ $$ = false; }
 	;
 
 /**
- * Conjuntos de valores (§13.1 del plan): "A to B" abrevia {A, A+1, ..., B}, y
- * donde se acepta un rango tambien se acepta un conjunto. Nunca vacio.
+ * Conjuntos de valores (devolucion del Stage I): "A to B" abrevia
+ * {A, A+1, ..., B}, y donde se acepta un rango tambien se acepta un conjunto.
+ * Nunca vacio.
  *
  * Los negativos solo se admiten en "die ... faces" y en los generadores de
  * mazo. En el resto de las declaraciones se exige INTEGER pelado, lo que
@@ -372,8 +374,8 @@ field: typeSpec IDENTIFIER SEMI											{ $$ = FieldSemanticAction($1, $2); }
 
 /**
  * El cuerpo de un mazo es una lista de cartas O una lista de generadores, sin
- * mezclar (§13.2 del plan). Los generadores arman el producto cartesiano de
- * sus conjuntos de valores.
+ * mezclar (devolucion del Stage I). Los generadores arman el producto
+ * cartesiano de sus conjuntos de valores.
  */
 deckBody: cardList														{ $$ = CardsDeckBodySemanticAction($1); }
 	| generatorList														{ $$ = GeneratorsDeckBodySemanticAction($1); }
@@ -433,10 +435,10 @@ policyList: policy														{ $$ = $1; }
 	;
 
 /**
- * Politicas (§13.8 del plan): criterios encadenados con coma, donde cada uno
- * desempata al anterior, y un filtro "where" opcional. Los criterios que no
- * ordenan (random, first, input) solo pueden ir al final: despues de ellos no
- * queda nada que desempatar. Lo garantiza la gramatica.
+ * Politicas (devolucion del Stage I): criterios encadenados con coma, donde
+ * cada uno desempata al anterior, y un filtro "where" opcional. Los criterios
+ * que no ordenan (random, first, input) solo pueden ir al final: despues de
+ * ellos no queda nada que desempatar. Lo garantiza la gramatica.
  */
 policy: IDENTIFIER COLON PREFER criteria whereOpt SEMI					{ $$ = PolicySemanticAction($1, $4, $5); }
 	;
@@ -579,9 +581,9 @@ actionStatement: PLACE postfix ON expression SEMI						{ $$ = ActionStatementSem
 	;
 
 /**
- * Cadena del log, con interpolaciones "{expr}" (§13.7 del plan). El lexer ya
- * la parte en STRING_HEAD, STRING_MIDDLE y STRING_TAIL. Una interpolacion
- * vacia ("{}") o sin cerrar es un error de sintaxis.
+ * Cadena del log, con interpolaciones "{expr}" (devolucion del Stage I). El
+ * lexer ya la parte en STRING_HEAD, STRING_MIDDLE y STRING_TAIL. Una
+ * interpolacion vacia ("{}") o sin cerrar es un error de sintaxis.
  */
 interpolatedString: STRING												{ $$ = TextLogPartSemanticAction($1); }
 	| STRING_HEAD expression interpolationRest							{ $$ = InterpolationLogPartSemanticAction($1, $2, $3); }
