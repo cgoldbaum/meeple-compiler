@@ -1,0 +1,8 @@
+// El jugador activo cambia su propia estrategia. Sin tail, "current uses X;"
+// necesita su propia produccion (lvalueTail no puede ser vacio).
+game "Cambio de estrategia" {
+	players 2 to 2;
+	decision d: integer;
+	strategy S { d: prefer first; }
+	turn { current uses S; }
+}

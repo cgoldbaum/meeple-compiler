@@ -1,0 +1,3 @@
+// current solo admite "uses" (current uses X;): asignarle un valor es un error
+// de sintaxis.
+game "X" { players 2 to 2; turn { current = players[0]; } }

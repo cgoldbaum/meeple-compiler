@@ -528,8 +528,14 @@ lvalueEnd: ASSIGN expression SEMI										{ $$ = AssignmentStatementSemanticAct
 /**
  * Las variables predefinidas tambien son lvalues ("players[0] uses X;"), pero
  * no son IDENTIFIER, asi que necesitan su propia produccion.
+ *
+ * "current uses X;" va aparte porque lvalueTail no puede ser vacio. Solo se
+ * admite "uses": "current = x;" no tiene sentido y sigue siendo un error de
+ * sintaxis. No hay conflicto: despues de CURRENT, "uses" desplaza y "." o "["
+ * reducen a globalName.
  */
 globalStatement: globalName lvalueTail lvalueEnd						{ $$ = LvalueStatementSemanticAction($1, $2, $3, @1.first_line); }
+	| CURRENT USES IDENTIFIER SEMI										{ $$ = LvalueStatementSemanticAction(PredefinedExpressionSemanticAction(CURRENT_EXPRESSION), NULL, UsesStatementSemanticAction($3), @1.first_line); }
 	;
 
 globalName: CURRENT														{ $$ = PredefinedExpressionSemanticAction(CURRENT_EXPRESSION); }
