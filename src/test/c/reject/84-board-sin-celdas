@@ -1,0 +1,2 @@
+// Un board tiene al menos una celda.
+game "X" { players 2 to 2; board cells 0; }

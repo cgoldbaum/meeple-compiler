@@ -1,0 +1,2 @@
+// La variable de un for es de solo lectura.
+game "X" { players 2 to 2; turn { for (i in 1 to 3) { i = 0; } } }

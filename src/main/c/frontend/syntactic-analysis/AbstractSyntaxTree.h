@@ -20,8 +20,10 @@ typedef enum LiteralType LiteralType;
 typedef enum LogPartType LogPartType;
 typedef enum ReportAggregator ReportAggregator;
 typedef enum ReportItemType ReportItemType;
+typedef enum Resolution Resolution;
 typedef enum StatementType StatementType;
 typedef enum TopLevelType TopLevelType;
+typedef enum TypeKind TypeKind;
 typedef enum ValueSetType ValueSetType;
 
 typedef struct Card Card;
@@ -42,6 +44,7 @@ typedef struct ReportItem ReportItem;
 typedef struct Simulation Simulation;
 typedef struct Statement Statement;
 typedef struct TopLevel TopLevel;
+typedef struct Type Type;
 typedef struct TypeSpec TypeSpec;
 typedef struct ValueSet ValueSet;
 typedef struct VariableDeclaration VariableDeclaration;
@@ -90,6 +93,82 @@ struct ValueSet {
 	int max;
 	Literal * elements;
 	ValueSetType type;
+};
+
+/**
+ * Anotaciones del analisis semantico. El parser crea los nodos con calloc, asi
+ * que salen en cero (UNCHECKED_KIND y NO_RESOLUTION); el SemanticAnalyzer las
+ * completa y el generador de codigo solo las lee. No reservan memoria: no hay
+ * nada que liberar en los destroyXxx.
+ */
+
+enum TypeKind {
+	/* Cero: la expresion todavia no paso por el analisis semantico. */
+	UNCHECKED_KIND,
+	/* Expresion mal tipada. Es compatible con todo, para no reportar errores en cascada. */
+	ERROR_KIND,
+
+	BOOLEAN_KIND,
+	INTEGER_KIND,
+	STRING_KIND,
+	PLAYER_KIND,
+	PIECE_KIND,
+	/* Una carta. El cardtype va en Type.cardType. */
+	CARD_KIND,
+	STRATEGY_KIND,
+	/* El literal none: se asigna y se compara contra jugadores, fichas y cartas. */
+	NONE_KIND,
+
+	/* Tipos internos: no se pueden declarar. */
+	BOARD_KIND,
+	/* El resultado de board.cell(i): solo sirve como destino de "place". */
+	CELL_KIND,
+	/* Un "deck of T". T va en Type.cardType. */
+	DECK_KIND,
+	DIE_KIND
+};
+
+struct Type {
+	TypeKind kind;
+	/* T[]: un arreglo de elementos de tipo kind. Nunca es true con DECK_KIND. */
+	bool isArray;
+	/*
+	 * Nombre del cardtype con CARD_KIND y DECK_KIND; NULL con los demas. Apunta
+	 * al nombre que ya guarda el AST (el del item cardtype), asi que el tipo no
+	 * es dueno de esa memoria.
+	 */
+	const char * cardType;
+};
+
+/**
+ * A que se refiere un nombre. Lo usan IDENTIFIER_EXPRESSION, MEMBER_EXPRESSION
+ * y la estrategia de un USES_STATEMENT.
+ */
+enum Resolution {
+	/* Cero: el nodo no nombra nada, o todavia no se resolvio. */
+	NO_RESOLUTION,
+
+	/* Identificadores. */
+	/* Local de prepare o turn, variable de un for o de una agregacion. */
+	LOCAL_RESOLUTION,
+	/* Variable declarada en el game. */
+	GAME_VARIABLE_RESOLUTION,
+	/* Mazo general (sin "per player"). */
+	DECK_RESOLUTION,
+	DIE_RESOLUTION,
+	/* Ficha general (sin "per player"). */
+	PIECE_RESOLUTION,
+	STRATEGY_RESOLUTION,
+
+	/* Miembros. */
+	/* name, index, score, pieces, strategy, owner, cell, size, min, max, faces o cardtype. */
+	PREDEFINED_MEMBER_RESOLUTION,
+	/* p.Mano, con "deck Mano of T per player;". */
+	PER_PLAYER_DECK_RESOLUTION,
+	/* p.token, con "piece token per player;". */
+	PER_PLAYER_PIECE_RESOLUTION,
+	/* c.valor, con "valor" un campo del cardtype de c. */
+	CARD_FIELD_RESOLUTION
 };
 
 enum ExpressionType {
@@ -177,6 +256,10 @@ struct Expression {
 		} aggregation;
 	};
 	ExpressionType type;
+	int line;
+	/* Anotaciones del analisis semantico. "type" es la clase de nodo; esto, el tipo de su valor. */
+	Type semanticType;
+	Resolution resolution;
 };
 
 struct ExpressionList {
@@ -232,6 +315,8 @@ struct Statement {
 			Expression * target;
 			Expression * value;
 			char * strategy;
+			/* USES_STATEMENT: STRATEGY_RESOLUTION, GAME_VARIABLE_RESOLUTION o LOCAL_RESOLUTION. */
+			Resolution strategyResolution;
 		} assignment;
 
 		Statement * statements;

@@ -1,0 +1,2 @@
+// board existe solo si el game lo declara.
+game "X" { players 2 to 2; turn { integer n = board.size; } }

@@ -1,0 +1,6 @@
+// Una carta da cada campo una sola vez.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta { card { v: 1; v: 2; } }
+}

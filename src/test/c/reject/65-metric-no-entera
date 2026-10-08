@@ -1,0 +1,2 @@
+// Una metric es un integer: el report la promedia.
+game "X" { players 2 to 2; metric ganador = current.name; }

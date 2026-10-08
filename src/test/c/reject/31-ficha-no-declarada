@@ -1,0 +1,3 @@
+// PDF §5.2 caso 2: se mueve una ficha que no fue declarada. "fantasma" no es
+// un miembro de player ni una ficha per player.
+game "X" { players 2 to 2; board cells 10; turn { move current.fantasma forward 1; } }

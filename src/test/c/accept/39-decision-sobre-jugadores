@@ -1,0 +1,11 @@
+// Una decision sobre jugadores: a quien regalarle un punto.
+game "Regalo" {
+	players 2 to 4;
+	decision regalar: player;
+	strategy AlUltimo { regalar: prefer min option.score where option != current; }
+	turn {
+		player elegido = ask current for regalar(players);
+		if (elegido != none) { give 1 to elegido; }
+	}
+	win when current.score >= 5;
+}

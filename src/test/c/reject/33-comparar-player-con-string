@@ -1,0 +1,2 @@
+// PDF §5.2 caso 4, segundo ejemplo: comparar un player con un string.
+game "X" { players 2 to 2; turn { if (current == "Ana") { give 1 to current; } } }

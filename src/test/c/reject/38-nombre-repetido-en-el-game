@@ -1,0 +1,7 @@
+// Los nombres de un game son unicos: dos mazos "Mazo".
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta;
+	deck Mazo of Carta;
+}

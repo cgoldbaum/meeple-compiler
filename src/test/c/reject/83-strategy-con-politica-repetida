@@ -1,0 +1,6 @@
+// Una strategy resuelve cada decision una sola vez.
+game "X" {
+	players 2 to 2;
+	decision d: integer;
+	strategy S { d: prefer first; d: prefer random; }
+}

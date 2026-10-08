@@ -1,0 +1,3 @@
+// Un report resume el simulate anterior: sin simulate no hay nada que reportar.
+game "X" { players 2 to 2; }
+report { winrate; }

@@ -1,0 +1,11 @@
+// Una politica no puede consultar otra decision: el ask podria no terminar.
+game "X" {
+	players 2 to 2;
+	die D6 faces 1 to 6;
+	decision a: integer;
+	decision b: integer;
+	strategy S {
+		a: prefer max option;
+		b: prefer max ask current for a(D6.faces);
+	}
+}

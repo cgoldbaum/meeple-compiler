@@ -1,0 +1,2 @@
+// Solo se indexan arreglos y mazos.
+game "X" { players 2 to 2; turn { player p = current[0]; } }

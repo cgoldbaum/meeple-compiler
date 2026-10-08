@@ -1,0 +1,6 @@
+// Las cartas respetan exactamente los campos de su cardtype (§4.2): falta "palo".
+game "X" {
+	players 2 to 2;
+	cardtype Naipe { integer valor; string palo; }
+	deck Mazo of Naipe { card { valor: 1; } }
+}

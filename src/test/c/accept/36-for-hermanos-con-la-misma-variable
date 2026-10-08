@@ -1,0 +1,10 @@
+// Dos for seguidos pueden usar la misma variable: el alcance del primero ya
+// cerro. Lo mismo vale para las agregaciones.
+game "Hermanos" {
+	players 2 to 4;
+	prepare {
+		for (p in players) { give 1 to p; }
+		for (p in players) { give 2 to p; }
+		integer a = count(p in players where p.score > 1) + sum(p in players by p.score);
+	}
+}

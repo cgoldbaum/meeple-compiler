@@ -1,0 +1,7 @@
+// Dentro de un game, todo se declara antes de usarse (§4.2): el mazo nombra un
+// cardtype que se declara despues.
+game "X" {
+	players 2 to 2;
+	deck Mazo of Carta;
+	cardtype Carta { integer v; }
+}

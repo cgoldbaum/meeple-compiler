@@ -1,0 +1,2 @@
+// Una variable se inicializa con un valor de su tipo.
+game "X" { players 2 to 2; turn { integer x = "a"; } }

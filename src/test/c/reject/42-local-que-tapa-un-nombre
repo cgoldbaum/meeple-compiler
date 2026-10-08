@@ -1,0 +1,2 @@
+// No hay shadowing: la variable del for no puede llamarse como otra visible.
+game "X" { players 2 to 2; turn { integer p = 0; for (p in players) { give 1 to p; } } }

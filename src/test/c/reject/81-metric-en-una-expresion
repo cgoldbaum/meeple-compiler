@@ -1,0 +1,2 @@
+// Una metric se evalua al terminar la partida: solo se usa en un report.
+game "X" { players 2 to 2; metric puntos = current.score; win when puntos > 10; }

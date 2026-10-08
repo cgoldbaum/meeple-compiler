@@ -1,0 +1,14 @@
+// Los mazos son referencias: == y != dicen si son el mismo mazo. Se pueden
+// comparar dos mazos del mismo cardtype, tambien uno per player.
+game "Mazos" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta { card { v: 1; } card { v: 2; } }
+	deck Descarte of Carta;
+	deck Mano of Carta per player;
+	turn {
+		if (Mazo != Descarte and current.Mano != Mazo) {
+			draw 1 from Mazo to current.Mano;
+		}
+	}
+}

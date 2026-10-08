@@ -1,5 +1,4 @@
 // PDF §5.2 caso 5: la carta declara un campo que el cardtype no tiene.
-// Requiere tabla de simbolos -> Stage III.
 game "X" {
 	players 2 to 2;
 	cardtype Carta { integer v; }

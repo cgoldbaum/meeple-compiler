@@ -1,0 +1,7 @@
+// prefer max y prefer min ordenan por un integer.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { string nombre; }
+	decision jugar: Carta;
+	strategy S { jugar: prefer max option.nombre; }
+}

@@ -1,0 +1,2 @@
+// La unica llamada del lenguaje es board.cell(i).
+game "X" { players 2 to 2; turn { string s = current.name(1); } }

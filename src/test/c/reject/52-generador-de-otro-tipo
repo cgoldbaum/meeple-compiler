@@ -1,0 +1,6 @@
+// Los literales de un generador son del tipo del campo: "palo" es string.
+game "X" {
+	players 2 to 2;
+	cardtype Naipe { integer valor; string palo; }
+	deck Mazo of Naipe { valor: 1 to 12; palo: {1, 2}; }
+}

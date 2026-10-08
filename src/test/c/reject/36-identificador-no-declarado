@@ -1,0 +1,2 @@
+// PDF §5.2 caso 2, con un jugador: "Juan" no esta declarado.
+game "X" { players 2 to 2; turn { give 1 to Juan; } }

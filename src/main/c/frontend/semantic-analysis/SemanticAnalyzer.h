@@ -6,6 +6,9 @@
 #include "../../support/type/CompilerState.h"
 #include "../../support/type/ModuleDestructor.h"
 #include "../syntactic-analysis/AbstractSyntaxTree.h"
+#include "SymbolTable.h"
+#include "Type.h"
+#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,21 +18,22 @@
 ModuleDestructor initializeSemanticAnalyzerModule();
 
 /**
- * Recorre el AST ya construido y aplica los chequeos semanticos de los casos
- * de rechazo 8, 9 y 10 del PDF (§5.2):
+ * Analisis semantico sobre el AST ya construido. Hace tres recorridos:
  *
- *   8. Toda "strategy" resuelve todos los "decision" declarados en su game.
- *   9. Todo "ask" nombra un "decision" declarado en su game.
- *  10. Todo "simulate" nombra un game declarado, con una cantidad de jugadores
- *      que ese game admite.
+ *   1. Los nombres de los game, para rechazar los repetidos.
+ *   2. Cada game, en orden: declara cada item en la tabla de simbolos y chequea
+ *      sus expresiones con lo declarado hasta ese punto (declarar antes de
+ *      usar). Al cerrar el game chequea las strategy, que pueden resolver
+ *      decisiones declaradas despues.
+ *   3. Los simulate y los report, en orden.
  *
- * Ninguno de los tres se puede chequear en una accion de Bison: los tres miran
- * declaraciones que pueden aparecer *despues* del uso (una strategy se reduce
- * antes de saber si mas abajo hay otro decision, y un simulate puede preceder
- * al game que nombra), asi que necesitan el AST completo.
+ * Al terminar, cada Expression tiene su tipo (semanticType) y cada nombre su
+ * resolucion: es lo que lee el generador de codigo. La tabla de simbolos se
+ * libera antes de volver.
  *
  * Reporta todos los errores que encuentra, no solo el primero, y devuelve
- * SUCCEEDED solo si no encontro ninguno.
+ * SUCCEEDED solo si no encontro ninguno. Una expresion mal tipada toma el tipo
+ * error, que es compatible con todo, para no reportar errores en cascada.
  */
 CompilationStatus executeSemanticAnalysis(CompilerState * compilerState);
 

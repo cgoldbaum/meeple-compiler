@@ -1,0 +1,6 @@
+// El valor de cada campo es del tipo declarado: "ataque" es integer.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer ataque; }
+	deck Mazo of Carta { card { ataque: "alto"; } }
+}

@@ -1,0 +1,6 @@
+// Una carta posicional da un valor por campo, en orden: Carta tiene dos.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer ataque; integer costo; }
+	deck Mazo of Carta { card {1} }
+}

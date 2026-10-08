@@ -1,0 +1,2 @@
+// La condicion de un if es boolean: no hay conversion desde integer.
+game "X" { players 2 to 2; turn { if (1) { give 1 to current; } } }

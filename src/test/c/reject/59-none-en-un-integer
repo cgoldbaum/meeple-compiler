@@ -1,0 +1,2 @@
+// none solo vale para referencias: cartas, jugadores y fichas.
+game "X" { players 2 to 2; turn { integer x = none; } }

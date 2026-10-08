@@ -1,0 +1,3 @@
+// Una variable no puede ser deck ni die: los mazos y los dados se usan por su
+// nombre.
+game "X" { players 2 to 2; turn { deck m; } }

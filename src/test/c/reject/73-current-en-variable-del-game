@@ -1,0 +1,2 @@
+// Las variables del game se inicializan antes del primer turno: no hay current.
+game "X" { players 2 to 2; player primero = current; }

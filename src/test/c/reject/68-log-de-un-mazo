@@ -1,0 +1,7 @@
+// Un log muestra valores simples: un mazo no se puede interpolar.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mano of Carta per player;
+	turn { log "{current.Mano}"; }
+}

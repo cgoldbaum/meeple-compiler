@@ -1,0 +1,2 @@
+// La condicion de victoria es boolean.
+game "X" { players 2 to 2; win when current.score; }

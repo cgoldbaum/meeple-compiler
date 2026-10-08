@@ -1,0 +1,2 @@
+// option solo existe dentro de la politica de una strategy.
+game "X" { players 2 to 2; turn { integer x = option; } }

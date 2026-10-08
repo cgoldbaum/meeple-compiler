@@ -1,0 +1,9 @@
+// El ask nombra una decision declarada antes: declarar antes de usar vale
+// tambien para las decisiones.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mano of Carta per player;
+	turn { Carta c = ask current for jugar(current.Mano); }
+	decision jugar: Carta;
+}

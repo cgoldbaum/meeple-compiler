@@ -1,0 +1,11 @@
+// Un mazo se usa donde se espera un T[]: al asignarlo, se copia.
+game "Copia" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta { card { v: 1; } card { v: 2; } }
+	turn {
+		Carta[] copia = Mazo;
+		Carta primera = copia[0];
+		for (c in copia) { give c.v to current; }
+	}
+}

@@ -1,0 +1,6 @@
+// Los generadores dan valores para todos los campos del cardtype: falta "palo".
+game "X" {
+	players 2 to 2;
+	cardtype Naipe { integer valor; string palo; }
+	deck Mazo of Naipe { valor: 1 to 12; }
+}

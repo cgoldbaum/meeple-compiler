@@ -1,0 +1,8 @@
+// Un mazo no se reasigna: sus cartas se mueven con draw y play.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta;
+	deck Mesa of Carta;
+	turn { Mazo = Mesa; }
+}

@@ -1,0 +1,2 @@
+// uses asigna una strategy declarada en el game.
+game "X" { players 2 to 2; prepare { players[0] uses Agresivo; } }

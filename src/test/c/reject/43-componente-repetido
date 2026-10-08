@@ -1,0 +1,3 @@
+// Un game tiene un solo board (y un solo players, prepare, turn, turn order,
+// win when y end after).
+game "X" { players 2 to 2; board cells 10; board cells 20; }

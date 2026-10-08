@@ -1,5 +1,4 @@
 // PDF §5.2 caso 6: draw entre mazos de cardtype distinto.
-// Requiere type-checker -> Stage III.
 game "X" {
 	players 2 to 2;
 	cardtype A { integer v; }

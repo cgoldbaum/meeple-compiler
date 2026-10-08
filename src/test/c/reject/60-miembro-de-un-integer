@@ -1,0 +1,2 @@
+// Un integer no tiene miembros.
+game "X" { players 2 to 2; turn { integer x = 1; integer y = x.valor; } }

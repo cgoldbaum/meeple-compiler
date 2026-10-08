@@ -22,7 +22,9 @@ ModuleDestructor initializeGeneratorModule() {
 /** PRIVATE FUNCTIONS */
 
 static void _begin(const unsigned int level, const char * label);
+static void _expressionLine(const unsigned int level, const char * label, Expression * expression, const char * const format, ...);
 static void _line(const unsigned int level, const char * label, const char * const format, ...);
+static const char * _resolutionName(const Resolution resolution);
 static const char * _baseTypeName(TypeSpec * typeSpec);
 static const char * _binaryOperator(const ExpressionType type);
 static void _printCard(const unsigned int level, Card * card);
@@ -52,6 +54,42 @@ static void _line(const unsigned int level, const char * label, const char * con
 	va_end(arguments);
 	printf("\n");
 	fflush(stdout);
+}
+
+/**
+ * Como _line, pero agrega lo que anoto el analisis semantico: el tipo de la
+ * expresion y, si es un nombre, a que se resolvio.
+ */
+static void _expressionLine(const unsigned int level, const char * label, Expression * expression, const char * const format, ...) {
+	char type[128];
+	_begin(level, label);
+	va_list arguments;
+	va_start(arguments, format);
+	vfprintf(stdout, format, arguments);
+	va_end(arguments);
+	printf(" -> %s", typeName(expression->semanticType, type, sizeof(type)));
+	if (expression->resolution != NO_RESOLUTION) {
+		printf(" (%s)", _resolutionName(expression->resolution));
+	}
+	printf("\n");
+	fflush(stdout);
+}
+
+static const char * _resolutionName(const Resolution resolution) {
+	switch (resolution) {
+		case NO_RESOLUTION: return "unresolved";
+		case LOCAL_RESOLUTION: return "local";
+		case GAME_VARIABLE_RESOLUTION: return "game variable";
+		case DECK_RESOLUTION: return "deck";
+		case DIE_RESOLUTION: return "die";
+		case PIECE_RESOLUTION: return "piece";
+		case STRATEGY_RESOLUTION: return "strategy";
+		case PREDEFINED_MEMBER_RESOLUTION: return "predefined member";
+		case PER_PLAYER_DECK_RESOLUTION: return "per player deck";
+		case PER_PLAYER_PIECE_RESOLUTION: return "per player piece";
+		case CARD_FIELD_RESOLUTION: return "card field";
+	}
+	return "?";
 }
 
 static const char * _baseTypeName(TypeSpec * typeSpec) {
@@ -141,34 +179,34 @@ static void _printExpression(const unsigned int level, const char * label, Expre
 		case NOT_EQUAL_EXPRESSION:
 		case OR_EXPRESSION:
 		case SUBTRACTION_EXPRESSION:
-			_line(level, label, "Binary %s", _binaryOperator(expression->type));
+			_expressionLine(level, label, expression, "Binary %s", _binaryOperator(expression->type));
 			_printExpression(level + 1, "left", expression->left);
 			_printExpression(level + 1, "right", expression->right);
 			break;
 		case NEGATION_EXPRESSION:
-			_line(level, label, "Unary -");
+			_expressionLine(level, label, expression, "Unary -");
 			_printExpression(level + 1, "operand", expression->operand);
 			break;
 		case NOT_EXPRESSION:
-			_line(level, label, "Unary not");
+			_expressionLine(level, label, expression, "Unary not");
 			_printExpression(level + 1, "operand", expression->operand);
 			break;
 		case CALL_EXPRESSION:
-			_line(level, label, "Call");
+			_expressionLine(level, label, expression, "Call");
 			_printExpression(level + 1, "function", expression->postfix.object);
 			_printExpressionList(level + 1, "argument", expression->postfix.arguments);
 			break;
 		case INDEX_EXPRESSION:
-			_line(level, label, "Index");
+			_expressionLine(level, label, expression, "Index");
 			_printExpression(level + 1, "object", expression->postfix.object);
 			_printExpression(level + 1, "index", expression->postfix.index);
 			break;
 		case MEMBER_EXPRESSION:
-			_line(level, label, "Member .%s", expression->postfix.member);
+			_expressionLine(level, label, expression, "Member .%s", expression->postfix.member);
 			_printExpression(level + 1, "object", expression->postfix.object);
 			break;
 		case ASK_EXPRESSION:
-			_line(level, label, "Ask %s", expression->ask.decision);
+			_expressionLine(level, label, expression, "Ask %s", expression->ask.decision);
 			_printExpression(level + 1, "player", expression->ask.player);
 			_printExpressionList(level + 1, "argument", expression->ask.arguments);
 			break;
@@ -180,44 +218,44 @@ static void _printExpression(const unsigned int level, const char * label, Expre
 				[SELECT_AGGREGATION] = "select",
 				[SUM_AGGREGATION] = "sum"
 			};
-			_line(level, label, "Aggregation %s (%s in ...)", names[expression->aggregation.type], expression->aggregation.variable);
+			_expressionLine(level, label, expression, "Aggregation %s (%s in ...)", names[expression->aggregation.type], expression->aggregation.variable);
 			_printExpression(level + 1, "collection", expression->aggregation.collection);
 			_printExpression(level + 1, "where", expression->aggregation.where);
 			_printExpression(level + 1, "by", expression->aggregation.by);
 			break;
 		}
 		case BOARD_EXPRESSION:
-			_line(level, label, "board");
+			_expressionLine(level, label, expression, "board");
 			break;
 		case BOOLEAN_EXPRESSION:
-			_line(level, label, "Boolean %s", expression->boolean ? "true" : "false");
+			_expressionLine(level, label, expression, "Boolean %s", expression->boolean ? "true" : "false");
 			break;
 		case CURRENT_EXPRESSION:
-			_line(level, label, "current");
+			_expressionLine(level, label, expression, "current");
 			break;
 		case IDENTIFIER_EXPRESSION:
-			_line(level, label, "Identifier %s", expression->identifier);
+			_expressionLine(level, label, expression, "Identifier %s", expression->identifier);
 			break;
 		case INTEGER_EXPRESSION:
-			_line(level, label, "Integer %d", expression->integer);
+			_expressionLine(level, label, expression, "Integer %d", expression->integer);
 			break;
 		case NONE_EXPRESSION:
-			_line(level, label, "none");
+			_expressionLine(level, label, expression, "none");
 			break;
 		case OPTION_EXPRESSION:
-			_line(level, label, "option");
+			_expressionLine(level, label, expression, "option");
 			break;
 		case PLAYERS_EXPRESSION:
-			_line(level, label, "players");
+			_expressionLine(level, label, expression, "players");
 			break;
 		case ROLL_EXPRESSION:
-			_line(level, label, "Roll %s", expression->die);
+			_expressionLine(level, label, expression, "Roll %s", expression->die);
 			break;
 		case STRING_EXPRESSION:
-			_line(level, label, "String \"%s\"", expression->string);
+			_expressionLine(level, label, expression, "String \"%s\"", expression->string);
 			break;
 		case TURNS_EXPRESSION:
-			_line(level, label, "turns");
+			_expressionLine(level, label, expression, "turns");
 			break;
 	}
 }
@@ -285,7 +323,8 @@ static void _printStatement(const unsigned int level, const char * label, Statem
 			_printStatement(level + 1, "body", statement->loop.body);
 			break;
 		case USES_STATEMENT:
-			_line(level, label, "Uses %s (line %u)", statement->assignment.strategy, line);
+			_line(level, label, "Uses %s (%s) (line %u)", statement->assignment.strategy,
+				_resolutionName(statement->assignment.strategyResolution), line);
 			_printExpression(level + 1, "target", statement->assignment.target);
 			break;
 		case WHILE_STATEMENT:

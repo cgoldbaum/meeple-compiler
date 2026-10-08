@@ -86,19 +86,19 @@ Statement * UsesStatementSemanticAction(char * strategy);
 LogPart * InterpolationLogPartSemanticAction(char * text, Expression * expression, LogPart * rest);
 LogPart * TextLogPartSemanticAction(char * text);
 
-Expression * AggregationExpressionSemanticAction(const AggregationType type, char * variable, Expression * collection, Expression * where, Expression * by);
-Expression * AskExpressionSemanticAction(Expression * player, char * decision, ExpressionList * arguments);
-Expression * BinaryExpressionSemanticAction(Expression * left, Expression * right, const ExpressionType type);
-Expression * BooleanExpressionSemanticAction(const bool value);
-Expression * CallExpressionSemanticAction(Expression * object, ExpressionList * arguments);
-Expression * IdentifierExpressionSemanticAction(char * identifier);
-Expression * IndexExpressionSemanticAction(Expression * object, Expression * index);
-Expression * IntegerExpressionSemanticAction(const int value);
-Expression * MemberExpressionSemanticAction(Expression * object, char * member);
-Expression * PredefinedExpressionSemanticAction(const ExpressionType type);
-Expression * RollExpressionSemanticAction(char * die);
-Expression * StringExpressionSemanticAction(char * value);
-Expression * UnaryExpressionSemanticAction(Expression * operand, const ExpressionType type);
+Expression * AggregationExpressionSemanticAction(const AggregationType type, char * variable, Expression * collection, Expression * where, Expression * by, const int line);
+Expression * AskExpressionSemanticAction(Expression * player, char * decision, ExpressionList * arguments, const int line);
+Expression * BinaryExpressionSemanticAction(Expression * left, Expression * right, const ExpressionType type, const int line);
+Expression * BooleanExpressionSemanticAction(const bool value, const int line);
+Expression * CallExpressionSemanticAction(Expression * object, ExpressionList * arguments, const int line);
+Expression * IdentifierExpressionSemanticAction(char * identifier, const int line);
+Expression * IndexExpressionSemanticAction(Expression * object, Expression * index, const int line);
+Expression * IntegerExpressionSemanticAction(const int value, const int line);
+Expression * MemberExpressionSemanticAction(Expression * object, char * member, const int line);
+Expression * PredefinedExpressionSemanticAction(const ExpressionType type, const int line);
+Expression * RollExpressionSemanticAction(char * die, const int line);
+Expression * StringExpressionSemanticAction(char * value, const int line);
+Expression * UnaryExpressionSemanticAction(Expression * operand, const ExpressionType type, const int line);
 char * MemberNameSemanticAction(const char * keyword);
 
 #endif

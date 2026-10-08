@@ -1,0 +1,2 @@
+// Una decision elige una de sus opciones: no puede ser de tipo arreglo.
+game "X" { players 2 to 2; decision elegir: integer[]; }

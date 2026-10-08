@@ -1,0 +1,3 @@
+// Un simulate corre al menos una partida: el report divide por la cantidad.
+game "X" { players 2 to 2; }
+simulate 0 games of "X" with 2 players;

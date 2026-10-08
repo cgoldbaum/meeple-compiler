@@ -1,0 +1,2 @@
+// Todo game declara cuantos jugadores admite.
+game "X" { board cells 10; }

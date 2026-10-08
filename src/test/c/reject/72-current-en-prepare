@@ -1,0 +1,2 @@
+// En prepare todavia no hay jugador activo.
+game "X" { players 2 to 2; prepare { give 1 to current; } }

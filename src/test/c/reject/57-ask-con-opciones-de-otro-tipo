@@ -1,0 +1,8 @@
+// Las opciones de un ask son del tipo de la decision: "jugar" elige cartas,
+// no jugadores.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	decision jugar: Carta;
+	turn { Carta c = ask current for jugar(players); }
+}

@@ -1,0 +1,4 @@
+// El report agrega metric declaradas en el game simulado.
+game "X" { players 2 to 2; end after 10 turns; }
+simulate 10 games of "X" with 2 players;
+report { avg jugadas; }

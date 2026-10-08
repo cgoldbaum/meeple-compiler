@@ -511,14 +511,14 @@ identStatement: IDENTIFIER IDENTIFIER initializerOpt SEMI
 																		{ $$ = DeclarationStatementSemanticAction(VariableDeclarationSemanticAction(TypeSpecSemanticAction(NAMED_TYPE, $1, false), $2, $3), @1.first_line); }
 	| IDENTIFIER LBRACKET RBRACKET IDENTIFIER initializerOpt SEMI
 																		{ $$ = DeclarationStatementSemanticAction(VariableDeclarationSemanticAction(TypeSpecSemanticAction(NAMED_TYPE, $1, true), $4, $5), @1.first_line); }
-	| IDENTIFIER lvalueEnd												{ $$ = LvalueStatementSemanticAction(IdentifierExpressionSemanticAction($1), NULL, $2, @1.first_line); }
-	| IDENTIFIER lvalueTail lvalueEnd									{ $$ = LvalueStatementSemanticAction(IdentifierExpressionSemanticAction($1), $2, $3, @1.first_line); }
+	| IDENTIFIER lvalueEnd												{ $$ = LvalueStatementSemanticAction(IdentifierExpressionSemanticAction($1, @1.first_line), NULL, $2, @1.first_line); }
+	| IDENTIFIER lvalueTail lvalueEnd									{ $$ = LvalueStatementSemanticAction(IdentifierExpressionSemanticAction($1, @1.first_line), $2, $3, @1.first_line); }
 	;
 
-lvalueTail: DOT memberName												{ $$ = MemberExpressionSemanticAction(NULL, $2); }
-	| LBRACKET expression RBRACKET										{ $$ = IndexExpressionSemanticAction(NULL, $2); }
-	| lvalueTail DOT memberName											{ $$ = MemberExpressionSemanticAction($1, $3); }
-	| lvalueTail LBRACKET expression RBRACKET							{ $$ = IndexExpressionSemanticAction($1, $3); }
+lvalueTail: DOT memberName												{ $$ = MemberExpressionSemanticAction(NULL, $2, @1.first_line); }
+	| LBRACKET expression RBRACKET										{ $$ = IndexExpressionSemanticAction(NULL, $2, @1.first_line); }
+	| lvalueTail DOT memberName											{ $$ = MemberExpressionSemanticAction($1, $3, @1.first_line); }
+	| lvalueTail LBRACKET expression RBRACKET							{ $$ = IndexExpressionSemanticAction($1, $3, @1.first_line); }
 	;
 
 lvalueEnd: ASSIGN expression SEMI										{ $$ = AssignmentStatementSemanticAction($2); }
@@ -535,12 +535,12 @@ lvalueEnd: ASSIGN expression SEMI										{ $$ = AssignmentStatementSemanticAct
  * reducen a globalName.
  */
 globalStatement: globalName lvalueTail lvalueEnd						{ $$ = LvalueStatementSemanticAction($1, $2, $3, @1.first_line); }
-	| CURRENT USES IDENTIFIER SEMI										{ $$ = LvalueStatementSemanticAction(PredefinedExpressionSemanticAction(CURRENT_EXPRESSION), NULL, UsesStatementSemanticAction($3), @1.first_line); }
+	| CURRENT USES IDENTIFIER SEMI										{ $$ = LvalueStatementSemanticAction(PredefinedExpressionSemanticAction(CURRENT_EXPRESSION, @1.first_line), NULL, UsesStatementSemanticAction($3), @1.first_line); }
 	;
 
-globalName: CURRENT														{ $$ = PredefinedExpressionSemanticAction(CURRENT_EXPRESSION); }
-	| PLAYERS															{ $$ = PredefinedExpressionSemanticAction(PLAYERS_EXPRESSION); }
-	| OPTION															{ $$ = PredefinedExpressionSemanticAction(OPTION_EXPRESSION); }
+globalName: CURRENT														{ $$ = PredefinedExpressionSemanticAction(CURRENT_EXPRESSION, @1.first_line); }
+	| PLAYERS															{ $$ = PredefinedExpressionSemanticAction(PLAYERS_EXPRESSION, @1.first_line); }
+	| OPTION															{ $$ = PredefinedExpressionSemanticAction(OPTION_EXPRESSION, @1.first_line); }
 	;
 
 keywordDeclaration: keywordType IDENTIFIER initializerOpt SEMI
@@ -601,28 +601,28 @@ interpolationRest: STRING_TAIL											{ $$ = TextLogPartSemanticAction($1); }
 
 /** Expresiones y agregaciones (§4.3). */
 
-expression: expression ADD expression									{ $$ = BinaryExpressionSemanticAction($1, $3, ADDITION_EXPRESSION); }
-	| expression SUB expression											{ $$ = BinaryExpressionSemanticAction($1, $3, SUBTRACTION_EXPRESSION); }
-	| expression MUL expression											{ $$ = BinaryExpressionSemanticAction($1, $3, MULTIPLICATION_EXPRESSION); }
-	| expression DIV expression											{ $$ = BinaryExpressionSemanticAction($1, $3, DIVISION_EXPRESSION); }
-	| expression MOD expression											{ $$ = BinaryExpressionSemanticAction($1, $3, MODULE_EXPRESSION); }
-	| expression LT expression											{ $$ = BinaryExpressionSemanticAction($1, $3, LESS_EXPRESSION); }
-	| expression GT expression											{ $$ = BinaryExpressionSemanticAction($1, $3, GREATER_EXPRESSION); }
-	| expression LE expression											{ $$ = BinaryExpressionSemanticAction($1, $3, LESS_EQUAL_EXPRESSION); }
-	| expression GE expression											{ $$ = BinaryExpressionSemanticAction($1, $3, GREATER_EQUAL_EXPRESSION); }
-	| expression EQ expression											{ $$ = BinaryExpressionSemanticAction($1, $3, EQUAL_EXPRESSION); }
-	| expression NE expression											{ $$ = BinaryExpressionSemanticAction($1, $3, NOT_EQUAL_EXPRESSION); }
-	| expression AND expression											{ $$ = BinaryExpressionSemanticAction($1, $3, AND_EXPRESSION); }
-	| expression OR expression											{ $$ = BinaryExpressionSemanticAction($1, $3, OR_EXPRESSION); }
-	| NOT expression													{ $$ = UnaryExpressionSemanticAction($2, NOT_EXPRESSION); }
-	| SUB expression %prec UMINUS										{ $$ = UnaryExpressionSemanticAction($2, NEGATION_EXPRESSION); }
+expression: expression ADD expression									{ $$ = BinaryExpressionSemanticAction($1, $3, ADDITION_EXPRESSION, @1.first_line); }
+	| expression SUB expression											{ $$ = BinaryExpressionSemanticAction($1, $3, SUBTRACTION_EXPRESSION, @1.first_line); }
+	| expression MUL expression											{ $$ = BinaryExpressionSemanticAction($1, $3, MULTIPLICATION_EXPRESSION, @1.first_line); }
+	| expression DIV expression											{ $$ = BinaryExpressionSemanticAction($1, $3, DIVISION_EXPRESSION, @1.first_line); }
+	| expression MOD expression											{ $$ = BinaryExpressionSemanticAction($1, $3, MODULE_EXPRESSION, @1.first_line); }
+	| expression LT expression											{ $$ = BinaryExpressionSemanticAction($1, $3, LESS_EXPRESSION, @1.first_line); }
+	| expression GT expression											{ $$ = BinaryExpressionSemanticAction($1, $3, GREATER_EXPRESSION, @1.first_line); }
+	| expression LE expression											{ $$ = BinaryExpressionSemanticAction($1, $3, LESS_EQUAL_EXPRESSION, @1.first_line); }
+	| expression GE expression											{ $$ = BinaryExpressionSemanticAction($1, $3, GREATER_EQUAL_EXPRESSION, @1.first_line); }
+	| expression EQ expression											{ $$ = BinaryExpressionSemanticAction($1, $3, EQUAL_EXPRESSION, @1.first_line); }
+	| expression NE expression											{ $$ = BinaryExpressionSemanticAction($1, $3, NOT_EQUAL_EXPRESSION, @1.first_line); }
+	| expression AND expression											{ $$ = BinaryExpressionSemanticAction($1, $3, AND_EXPRESSION, @1.first_line); }
+	| expression OR expression											{ $$ = BinaryExpressionSemanticAction($1, $3, OR_EXPRESSION, @1.first_line); }
+	| NOT expression													{ $$ = UnaryExpressionSemanticAction($2, NOT_EXPRESSION, @1.first_line); }
+	| SUB expression %prec UMINUS										{ $$ = UnaryExpressionSemanticAction($2, NEGATION_EXPRESSION, @1.first_line); }
 	| postfix															{ $$ = $1; }
 	;
 
 postfix: primary														{ $$ = $1; }
-	| postfix DOT memberName											{ $$ = MemberExpressionSemanticAction($1, $3); }
-	| postfix LBRACKET expression RBRACKET								{ $$ = IndexExpressionSemanticAction($1, $3); }
-	| postfix LPAREN argumentListOpt RPAREN								{ $$ = CallExpressionSemanticAction($1, $3); }
+	| postfix DOT memberName											{ $$ = MemberExpressionSemanticAction($1, $3, @1.first_line); }
+	| postfix LBRACKET expression RBRACKET								{ $$ = IndexExpressionSemanticAction($1, $3, @1.first_line); }
+	| postfix LPAREN argumentListOpt RPAREN								{ $$ = CallExpressionSemanticAction($1, $3, @1.first_line); }
 	;
 
 /**
@@ -646,28 +646,28 @@ argumentList: expression												{ $$ = ExpressionListSemanticAction(NULL, $1
 	| argumentList COMMA expression										{ $$ = ExpressionListSemanticAction($1, $3); }
 	;
 
-primary: INTEGER														{ $$ = IntegerExpressionSemanticAction($1); }
-	| STRING															{ $$ = StringExpressionSemanticAction($1); }
-	| TRUE																{ $$ = BooleanExpressionSemanticAction(true); }
-	| FALSE																{ $$ = BooleanExpressionSemanticAction(false); }
-	| NONE																{ $$ = PredefinedExpressionSemanticAction(NONE_EXPRESSION); }
-	| IDENTIFIER														{ $$ = IdentifierExpressionSemanticAction($1); }
-	| CURRENT															{ $$ = PredefinedExpressionSemanticAction(CURRENT_EXPRESSION); }
-	| PLAYERS															{ $$ = PredefinedExpressionSemanticAction(PLAYERS_EXPRESSION); }
-	| TURNS																{ $$ = PredefinedExpressionSemanticAction(TURNS_EXPRESSION); }
-	| OPTION															{ $$ = PredefinedExpressionSemanticAction(OPTION_EXPRESSION); }
-	| BOARD																{ $$ = PredefinedExpressionSemanticAction(BOARD_EXPRESSION); }
+primary: INTEGER														{ $$ = IntegerExpressionSemanticAction($1, @1.first_line); }
+	| STRING															{ $$ = StringExpressionSemanticAction($1, @1.first_line); }
+	| TRUE																{ $$ = BooleanExpressionSemanticAction(true, @1.first_line); }
+	| FALSE																{ $$ = BooleanExpressionSemanticAction(false, @1.first_line); }
+	| NONE																{ $$ = PredefinedExpressionSemanticAction(NONE_EXPRESSION, @1.first_line); }
+	| IDENTIFIER														{ $$ = IdentifierExpressionSemanticAction($1, @1.first_line); }
+	| CURRENT															{ $$ = PredefinedExpressionSemanticAction(CURRENT_EXPRESSION, @1.first_line); }
+	| PLAYERS															{ $$ = PredefinedExpressionSemanticAction(PLAYERS_EXPRESSION, @1.first_line); }
+	| TURNS																{ $$ = PredefinedExpressionSemanticAction(TURNS_EXPRESSION, @1.first_line); }
+	| OPTION															{ $$ = PredefinedExpressionSemanticAction(OPTION_EXPRESSION, @1.first_line); }
+	| BOARD																{ $$ = PredefinedExpressionSemanticAction(BOARD_EXPRESSION, @1.first_line); }
 	| LPAREN expression RPAREN											{ $$ = $2; }
-	| ROLL IDENTIFIER													{ $$ = RollExpressionSemanticAction($2); }
-	| ASK expression FOR IDENTIFIER LPAREN argumentListOpt RPAREN		{ $$ = AskExpressionSemanticAction($2, $4, $6); }
+	| ROLL IDENTIFIER													{ $$ = RollExpressionSemanticAction($2, @1.first_line); }
+	| ASK expression FOR IDENTIFIER LPAREN argumentListOpt RPAREN		{ $$ = AskExpressionSemanticAction($2, $4, $6, @1.first_line); }
 	| aggregation														{ $$ = $1; }
 	;
 
-aggregation: COUNT LPAREN IDENTIFIER IN expression whereOpt RPAREN		{ $$ = AggregationExpressionSemanticAction(COUNT_AGGREGATION, $3, $5, $6, NULL); }
-	| SELECT LPAREN IDENTIFIER IN expression whereOpt RPAREN			{ $$ = AggregationExpressionSemanticAction(SELECT_AGGREGATION, $3, $5, $6, NULL); }
-	| SUM LPAREN IDENTIFIER IN expression whereOpt BY expression RPAREN	{ $$ = AggregationExpressionSemanticAction(SUM_AGGREGATION, $3, $5, $6, $8); }
-	| MAX LPAREN IDENTIFIER IN expression whereOpt BY expression RPAREN	{ $$ = AggregationExpressionSemanticAction(MAX_AGGREGATION, $3, $5, $6, $8); }
-	| MIN LPAREN IDENTIFIER IN expression whereOpt BY expression RPAREN	{ $$ = AggregationExpressionSemanticAction(MIN_AGGREGATION, $3, $5, $6, $8); }
+aggregation: COUNT LPAREN IDENTIFIER IN expression whereOpt RPAREN		{ $$ = AggregationExpressionSemanticAction(COUNT_AGGREGATION, $3, $5, $6, NULL, @1.first_line); }
+	| SELECT LPAREN IDENTIFIER IN expression whereOpt RPAREN			{ $$ = AggregationExpressionSemanticAction(SELECT_AGGREGATION, $3, $5, $6, NULL, @1.first_line); }
+	| SUM LPAREN IDENTIFIER IN expression whereOpt BY expression RPAREN	{ $$ = AggregationExpressionSemanticAction(SUM_AGGREGATION, $3, $5, $6, $8, @1.first_line); }
+	| MAX LPAREN IDENTIFIER IN expression whereOpt BY expression RPAREN	{ $$ = AggregationExpressionSemanticAction(MAX_AGGREGATION, $3, $5, $6, $8, @1.first_line); }
+	| MIN LPAREN IDENTIFIER IN expression whereOpt BY expression RPAREN	{ $$ = AggregationExpressionSemanticAction(MIN_AGGREGATION, $3, $5, $6, $8, @1.first_line); }
 	;
 
 whereOpt: %empty														{ $$ = NULL; }

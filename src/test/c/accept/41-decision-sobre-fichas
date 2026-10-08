@@ -1,0 +1,20 @@
+// Las decisiones no son solo para cartas: el jugador elige que ficha mover.
+game "Dos fichas" {
+	players 2 to 2;
+	board cells 20;
+	die D6 faces 1 to 6;
+	piece a per player;
+	piece b per player;
+	decision mover: piece;
+	strategy Rezagada { mover: prefer min option.cell; }
+	strategy Puntera { mover: prefer max option.cell, random; }
+	prepare { players[0] uses Rezagada; players[1] uses Puntera; }
+	turn {
+		piece f = ask current for mover(current.pieces);
+		move f forward roll D6;
+	}
+	win when current.a.cell == 19 and current.b.cell == 19;
+	end after 200 turns;
+}
+simulate 1000 games of "Dos fichas" with 2 players seed 7;
+report { winrate by strategy; avg turns; }

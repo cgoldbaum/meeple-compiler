@@ -1,6 +1,7 @@
 #ifndef GENERATOR_HEADER
 #define GENERATOR_HEADER
 
+#include "../../frontend/semantic-analysis/Type.h"
 #include "../../frontend/syntactic-analysis/AbstractSyntaxTree.h"
 #include "../../support/language/String.h"
 #include "../../support/logging/Logger.h"

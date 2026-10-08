@@ -546,15 +546,16 @@ LogPart * TextLogPartSemanticAction(char * text) {
 	return logPart;
 }
 
-static Expression * _createExpression(const ExpressionType type) {
+static Expression * _createExpression(const ExpressionType type, const int line) {
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->type = type;
+	expression->line = line;
 	return expression;
 }
 
-Expression * AggregationExpressionSemanticAction(const AggregationType type, char * variable, Expression * collection, Expression * where, Expression * by) {
+Expression * AggregationExpressionSemanticAction(const AggregationType type, char * variable, Expression * collection, Expression * where, Expression * by, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(AGGREGATION_EXPRESSION);
+	Expression * expression = _createExpression(AGGREGATION_EXPRESSION, line);
 	expression->aggregation.type = type;
 	expression->aggregation.variable = variable;
 	expression->aggregation.collection = collection;
@@ -563,90 +564,90 @@ Expression * AggregationExpressionSemanticAction(const AggregationType type, cha
 	return expression;
 }
 
-Expression * AskExpressionSemanticAction(Expression * player, char * decision, ExpressionList * arguments) {
+Expression * AskExpressionSemanticAction(Expression * player, char * decision, ExpressionList * arguments, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(ASK_EXPRESSION);
+	Expression * expression = _createExpression(ASK_EXPRESSION, line);
 	expression->ask.player = player;
 	expression->ask.decision = decision;
 	expression->ask.arguments = arguments;
 	return expression;
 }
 
-Expression * BinaryExpressionSemanticAction(Expression * left, Expression * right, const ExpressionType type) {
+Expression * BinaryExpressionSemanticAction(Expression * left, Expression * right, const ExpressionType type, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(type);
+	Expression * expression = _createExpression(type, line);
 	expression->left = left;
 	expression->right = right;
 	return expression;
 }
 
-Expression * BooleanExpressionSemanticAction(const bool value) {
+Expression * BooleanExpressionSemanticAction(const bool value, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(BOOLEAN_EXPRESSION);
+	Expression * expression = _createExpression(BOOLEAN_EXPRESSION, line);
 	expression->boolean = value;
 	return expression;
 }
 
-Expression * CallExpressionSemanticAction(Expression * object, ExpressionList * arguments) {
+Expression * CallExpressionSemanticAction(Expression * object, ExpressionList * arguments, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(CALL_EXPRESSION);
+	Expression * expression = _createExpression(CALL_EXPRESSION, line);
 	expression->postfix.object = object;
 	expression->postfix.arguments = arguments;
 	return expression;
 }
 
-Expression * IdentifierExpressionSemanticAction(char * identifier) {
+Expression * IdentifierExpressionSemanticAction(char * identifier, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(IDENTIFIER_EXPRESSION);
+	Expression * expression = _createExpression(IDENTIFIER_EXPRESSION, line);
 	expression->identifier = identifier;
 	return expression;
 }
 
-Expression * IndexExpressionSemanticAction(Expression * object, Expression * index) {
+Expression * IndexExpressionSemanticAction(Expression * object, Expression * index, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(INDEX_EXPRESSION);
+	Expression * expression = _createExpression(INDEX_EXPRESSION, line);
 	expression->postfix.object = object;
 	expression->postfix.index = index;
 	return expression;
 }
 
-Expression * IntegerExpressionSemanticAction(const int value) {
+Expression * IntegerExpressionSemanticAction(const int value, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(INTEGER_EXPRESSION);
+	Expression * expression = _createExpression(INTEGER_EXPRESSION, line);
 	expression->integer = value;
 	return expression;
 }
 
-Expression * MemberExpressionSemanticAction(Expression * object, char * member) {
+Expression * MemberExpressionSemanticAction(Expression * object, char * member, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(MEMBER_EXPRESSION);
+	Expression * expression = _createExpression(MEMBER_EXPRESSION, line);
 	expression->postfix.object = object;
 	expression->postfix.member = member;
 	return expression;
 }
 
-Expression * PredefinedExpressionSemanticAction(const ExpressionType type) {
+Expression * PredefinedExpressionSemanticAction(const ExpressionType type, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	return _createExpression(type);
+	return _createExpression(type, line);
 }
 
-Expression * RollExpressionSemanticAction(char * die) {
+Expression * RollExpressionSemanticAction(char * die, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(ROLL_EXPRESSION);
+	Expression * expression = _createExpression(ROLL_EXPRESSION, line);
 	expression->die = die;
 	return expression;
 }
 
-Expression * StringExpressionSemanticAction(char * value) {
+Expression * StringExpressionSemanticAction(char * value, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(STRING_EXPRESSION);
+	Expression * expression = _createExpression(STRING_EXPRESSION, line);
 	expression->string = value;
 	return expression;
 }
 
-Expression * UnaryExpressionSemanticAction(Expression * operand, const ExpressionType type) {
+Expression * UnaryExpressionSemanticAction(Expression * operand, const ExpressionType type, const int line) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = _createExpression(type);
+	Expression * expression = _createExpression(type, line);
 	expression->operand = operand;
 	return expression;
 }

@@ -1,0 +1,2 @@
+// El indice de un jugador es de solo lectura.
+game "X" { players 2 to 2; turn { current.index = 3; } }

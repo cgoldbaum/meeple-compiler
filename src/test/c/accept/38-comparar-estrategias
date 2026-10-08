@@ -1,0 +1,15 @@
+// Las estrategias son valores: se comparan, se guardan en variables y se
+// asignan con uses.
+game "Estrategias" {
+	players 2 to 2;
+	decision d: integer;
+	strategy Agresivo { d: prefer first; }
+	strategy Prudente { d: prefer random; }
+	turn {
+		if (current.strategy == Agresivo) {
+			strategy otra = Prudente;
+			current uses otra;
+		}
+		log "{current.name} juega con {current.strategy}";
+	}
+}

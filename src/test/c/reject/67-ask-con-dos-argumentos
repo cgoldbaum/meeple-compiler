@@ -1,0 +1,8 @@
+// ask recibe un solo argumento: las opciones.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mano of Carta per player;
+	decision jugar: Carta;
+	turn { Carta c = ask current for jugar(current.Mano, current.Mano); }
+}

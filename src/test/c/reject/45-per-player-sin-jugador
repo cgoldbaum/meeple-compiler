@@ -1,0 +1,8 @@
+// Un mazo per player se usa a traves de un jugador (current.Mano): suelto no
+// dice de quien es.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mano of Carta per player;
+	turn { integer n = count(c in Mano); }
+}

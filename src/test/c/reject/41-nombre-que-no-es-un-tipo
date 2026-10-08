@@ -1,0 +1,7 @@
+// "Mazo" existe, pero es un mazo: los tipos con nombre son los cardtype.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck Mazo of Carta;
+	turn { Mazo x; }
+}

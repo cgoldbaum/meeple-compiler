@@ -1,0 +1,3 @@
+// Los campos de un cardtype son integer, boolean o string: los unicos valores
+// que se pueden escribir en una carta.
+game "X" { players 2 to 2; cardtype Carta { player duenio; } }

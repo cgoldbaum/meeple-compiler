@@ -1,0 +1,3 @@
+// Dos game con el mismo nombre: un simulate no sabria cual correr.
+game "X" { players 2 to 2; }
+game "X" { players 2 to 4; }

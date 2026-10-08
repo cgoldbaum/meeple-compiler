@@ -1,0 +1,7 @@
+// "score" ya es un miembro de player: current.score no se podria distinguir
+// del mazo.
+game "X" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	deck score of Carta per player;
+}

@@ -1,0 +1,2 @@
+// roll tira un dado: "token" es una ficha.
+game "X" { players 2 to 2; piece token; turn { integer x = roll token; } }

@@ -1,0 +1,10 @@
+// play mueve una carta del cardtype de los mazos: "b" es de B, y los mazos de A.
+game "X" {
+	players 2 to 2;
+	cardtype A { integer v; }
+	cardtype B { integer w; }
+	deck MazoA of A;
+	deck MesaA of A;
+	deck MazoB of B { card { w: 1; } }
+	turn { B b = MazoB[0]; play b from MazoA to MesaA; }
+}

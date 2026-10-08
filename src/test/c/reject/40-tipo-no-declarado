@@ -1,0 +1,2 @@
+// El tipo de una variable tiene que existir: "Foo" no esta declarado.
+game "X" { players 2 to 2; turn { Foo x; } }

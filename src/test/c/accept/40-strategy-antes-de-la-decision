@@ -1,0 +1,8 @@
+// Una strategy resuelve todas las decisiones del game, tambien las declaradas
+// despues de ella.
+game "Orden" {
+	players 2 to 2;
+	cardtype Carta { integer v; }
+	strategy Alta { jugar: prefer max option.v; }
+	decision jugar: Carta;
+}
