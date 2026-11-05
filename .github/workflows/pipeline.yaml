@@ -24,6 +24,9 @@ jobs:
       - name: "Test."
         run: |
           src/main/bash/test.sh
+      - name: "Runtime."
+        run: |
+          src/main/bash/runtime.sh
 
 name: "CI"
 

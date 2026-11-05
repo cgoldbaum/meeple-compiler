@@ -1,0 +1,1 @@
+Error de ejecucion en la linea 5: board.cell(5) esta fuera del tablero: las celdas van de 0 a 4.
