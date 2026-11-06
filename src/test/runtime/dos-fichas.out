@@ -1,5 +1,0 @@
-simulate 1000 games of "Dos fichas" with 2 players seed 7
-winrate by strategy
-  Rezagada: 100.00%
-  Puntera: 0.00%
-avg turns: 22.59

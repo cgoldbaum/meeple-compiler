@@ -101,7 +101,8 @@ CompilationStatus EOFLexemeAction() {
 		status = pushToken(_lexicalAnalyzer, token);
 		FlexContext context = currentLexicalAnalyzerContext(_lexicalAnalyzer);
 		if (0 != context) {
-			logError(_logger, "The final context is not closed (context=%s).", _toContextString(context));
+			logError(_logger, "Linea %d: el archivo termina dentro de %s sin cerrar.", token->line,
+				context == 1 ? "un comentario" : "una interpolacion");
 			status = FAILED;
 		}
 	}
@@ -140,7 +141,7 @@ CompilationStatus IntegerLexemeAction() {
 	errno = 0;
 	long value = strtol(token->lexeme, NULL, 10);
 	if (errno == ERANGE || value > INT_MAX) {
-		logError(_logger, "Integer literal is out of range: \"%s\".", token->lexeme);
+		logError(_logger, "Linea %d: el entero %s no entra en un integer (el maximo es %d).", token->line, token->lexeme, INT_MAX);
 		/*
 		 * Se empuja como UNKNOWN para que el parser aborte y libere su pila con
 		 * los %destructor. Si solo se devolviera FAILED, lo que el parser ya

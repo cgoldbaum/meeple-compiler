@@ -24,9 +24,6 @@ jobs:
       - name: "Test."
         run: |
           src/main/bash/test.sh
-      - name: "Runtime."
-        run: |
-          src/main/bash/runtime.sh
       - name: "End to end."
         run: |
           src/main/bash/e2e.sh

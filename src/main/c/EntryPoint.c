@@ -34,18 +34,18 @@ const int main(const int length, const char ** arguments) {
 	CompilationStatus compilationStatus = executeSyntacticAnalysis();
 	Program * program = compilerState.abstractSyntaxtTree;
 	if (compilationStatus != SUCCEEDED) {
-		logError(logger, "The syntactic-analysis phase rejects the input program.");
+		logError(logger, "El analisis sintactico rechaza el programa.");
 		compilationStatus = FAILED;
 	}
 	else if (executeSemanticAnalysis(&compilerState) != SUCCEEDED) {
-		logError(logger, "The semantic-analysis phase rejects the input program.");
+		logError(logger, "El analisis semantico rechaza el programa.");
 		compilationStatus = FAILED;
 	}
 	else {
 		// ----------------------------------------------------------------------------------------
 		// Beginning of the Backend... ------------------------------------------------------------
 		if (executeGenerator(&compilerState) != SUCCEEDED) {
-			logError(logger, "The code-generation phase cannot write the output program.");
+			logError(logger, "La generacion de codigo no pudo escribir el programa de salida.");
 			compilationStatus = FAILED;
 		}
 		// ...end of the Backend. -----------------------------------------------------------------

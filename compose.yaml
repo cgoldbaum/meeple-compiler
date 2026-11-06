@@ -5,8 +5,8 @@ name: "ar-edu-itba-atlyc"
 x-shared:
   environment: &environment
     ENVIRONMENT: "${ENVIRONMENT:-Local}"
-    LOG_IGNORED_LEXEMES: "${LOG_IGNORED_LEXEMES:-true}"
-    LOGGING_LEVEL: "${LOGGING_LEVEL:-ALL}"
+    LOG_IGNORED_LEXEMES: "${LOG_IGNORED_LEXEMES:-false}"
+    LOGGING_LEVEL: "${LOGGING_LEVEL:-INFORMATION}"
 
 networks:
   ar-edu-itba-atlyc:

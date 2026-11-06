@@ -131,7 +131,7 @@ static void _checkSimulationsAndReports(TopLevel * topLevels);
 
 /**
  * Reporta un error semantico y lo cuenta. Imita el formato de yyerror en
- * BisonGrammar.y ("Line N: mensaje."), pero pasando por el Logger.
+ * BisonGrammar.y ("Linea N: mensaje."), pero pasando por el Logger.
  *
  * El analisis no aborta en el primer error, asi que un programa con varios
  * problemas los muestra todos en una sola corrida.
@@ -142,7 +142,7 @@ static void _error(const int line, const char * const format, ...) {
 	va_start(arguments, format);
 	vsnprintf(message, sizeof(message), format, arguments);
 	va_end(arguments);
-	logError(_logger, "Line %d: %s.", line, message);
+	logError(_logger, "Linea %d: %s.", line, message);
 	++_errors;
 }
 

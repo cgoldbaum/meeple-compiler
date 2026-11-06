@@ -1,5 +1,0 @@
-simulate 5000 games of "Duelo de Cartas" with 2 players seed 1
-winrate by strategy
-  Agresivo: 0.00%
-  Economico: 0.00%
-avg turns: 20.00

@@ -488,7 +488,7 @@ static void _member(Expression * expression) {
 			}
 			break;
 		default:
-			logError(_logger, "Line %d: miembro \"%s\" sin traduccion.", line, member);
+			logError(_logger, "Linea %d: miembro \"%s\" sin traduccion.", line, member);
 			_print("0");
 			break;
 	}

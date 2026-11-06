@@ -10,20 +10,6 @@ GREEN='\033[0;32m'
 OFF='\033[0m'
 RED='\033[0;31m'
 STATUS=0
-YELLOW='\033[0;33m'
-
-# pending/ tiene casos de rechazo que recien detecta el Stage III: se listan,
-# pero no se corren.
-echo "Compiler will ignore these tests:"
-echo ""
-
-for path in src/test/c/pending/**/*; do
-	if [ -f "$path" ]; then
-		TEST="${path#src/test/c/pending/}"
-		echo -e "    ${YELLOW}\"$TEST\"${OFF}"
-	fi
-done
-echo ""
 
 echo "Compiler should accept..."
 echo ""
