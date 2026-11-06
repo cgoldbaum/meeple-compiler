@@ -1,0 +1,56 @@
+simulate 2 games of "Acciones" with 2 players seed 3
+-- partida 1 --
+Pozo {valor: 1, palo: copa} {valor: 2, palo: oro} {valor: 1, palo: oro} Mazo 1 copa
+suma 10 max oro pares 1 mazo 9
+barajado 5 10
+ficha (celda 9)
+ficha (celda 0) 10
+total 45 caras 10 3
+Jugador 2 1
+Jugador 1 none
+Jugador 1 elige none con Primera
+Jugador 1 numero 2 true
+score -2
+Jugador 2 elige {valor: 3, palo: copa} con Exigente
+Jugador 2 numero 4 true
+score -2
+Jugador 1 elige none con Primera
+Jugador 1 numero 2 true
+score -4
+Jugador 2 elige {valor: 3, palo: copa} con Exigente
+Jugador 2 numero 4 true
+score -4
+gana Jugador 2 en el turno 4
+-- partida 2 --
+Pozo {valor: 1, palo: copa} {valor: 2, palo: oro} {valor: 1, palo: oro} Mazo 1 copa
+suma 10 max oro pares 1 mazo 9
+barajado 5 10
+ficha (celda 9)
+ficha (celda 0) 10
+total 45 caras 10 3
+Jugador 2 1
+Jugador 1 none
+Jugador 1 elige none con Primera
+Jugador 1 numero 2 true
+score -2
+Jugador 2 elige {valor: 3, palo: copa} con Exigente
+Jugador 2 numero 4 true
+score -2
+Jugador 1 elige none con Primera
+Jugador 1 numero 2 true
+score -4
+Jugador 2 elige {valor: 3, palo: copa} con Exigente
+Jugador 2 numero 4 true
+score -4
+gana Jugador 2 en el turno 4
+winrate: 100.00%
+winrate by player
+  Jugador 1: 0.00%
+  Jugador 2: 100.00%
+winrate by strategy
+  Exigente: 100.00%
+  Primera: 0.00%
+min turns: 4
+max turns: 4
+avg puntaje: -4.00
+min minimo: 0

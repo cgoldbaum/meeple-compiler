@@ -1,0 +1,13 @@
+game "Azar" {
+    players 3 to 3;
+    die D6 faces 1 to 6;
+    turn {
+        log "{current.name} tira {roll D6}";
+        give roll D6 to current;
+    }
+    win when current.score >= 12;
+}
+simulate 4 games of "Azar" with 3 players seed 11;
+report { winrate by player; avg turns; }
+simulate 4 games of "Azar" with 3 players seed 11 verbose;
+report { winrate by player; avg turns; }

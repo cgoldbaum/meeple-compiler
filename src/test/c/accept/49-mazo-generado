@@ -1,0 +1,14 @@
+// Producto cartesiano: el primer generador es el bucle de afuera, aunque el
+// cardtype declare los campos en otro orden.
+game "Generado" {
+    players 1 to 1;
+    cardtype C { boolean b; integer n; string s; }
+    deck M of C { n: -1 to 0; b: {true, false}; s: {"x"}; }
+    prepare {
+        log "{count(c in M)} {M[0]} {M[1]} {M[2]} {M[3]}";
+        log "{select(c in M where c.b)[1]} {min(c in M by c.n)} {max(c in M where not c.b by c.n)}";
+    }
+    end after 0 turns;
+}
+simulate 1 game of "Generado" with 1 players verbose;
+report { winrate; }

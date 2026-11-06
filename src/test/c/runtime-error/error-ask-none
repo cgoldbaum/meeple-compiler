@@ -1,0 +1,10 @@
+game "Ask" {
+    players 2 to 2;
+    decision d: player;
+    turn {
+        player nadie = none;
+        player x = ask nadie for d(players);
+    }
+}
+simulate 1 game of "Ask" with 2 players;
+report { winrate; }

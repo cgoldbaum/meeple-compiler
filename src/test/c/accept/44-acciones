@@ -1,0 +1,61 @@
+game "Acciones" {
+    players 2 to 2;
+    board cells 10;
+    die Raro faces {2, 4, 4};
+    cardtype Carta { integer valor; string palo; }
+    deck Mazo of Carta { valor: 1 to 3; palo: {"oro", "copa"}; }
+    deck Pozo of Carta;
+    piece ficha;
+    decision elegir: Carta;
+    decision numero: integer;
+    strategy Exigente {
+        elegir: prefer max option.valor where option.palo == "copa";
+        numero: prefer min option where option > 2;
+    }
+    strategy Primera { elegir: prefer first where option.valor == 9; numero: prefer first; }
+    metric puntaje = current.score;
+    metric minimo = min(p in players by p.score).index;
+    prepare {
+        draw 2 from Mazo to Pozo;
+        draw 10 from Mazo to Pozo;
+        draw 0 from Pozo to Mazo;
+        draw -1 from Pozo to Mazo;
+        draw 1 from Pozo to Pozo;
+        play Pozo[0] from Mazo to Pozo;
+        play Pozo[2] from Pozo to Mazo;
+        log "Pozo {Pozo[0]} {Pozo[1]} {Pozo[4]} Mazo {count(c in Mazo)} {Mazo[0].palo}";
+        Mazo[0].valor = 9;
+        log "suma {sum(c in Pozo by c.valor)} max {max(c in Pozo by c.valor).palo} pares {count(c in Pozo where c.valor % 2 == 0)} mazo {Mazo[0].valor}";
+        shuffle Pozo;
+        log "barajado {count(c in Pozo)} {sum(c in Pozo by c.valor)}";
+        place ficha on board.cell(3);
+        move ficha forward 100;
+        log "{ficha}";
+        move ficha forward -100;
+        log "{ficha} {board.size}";
+        integer total = 0;
+        for (i in 1 to 4) { total = total + i; }
+        repeat 3 { total = total * 2; }
+        while (total > 50) { total = total - 7; }
+        log "total {total} caras {sum(x in Raro.faces by x)} {count(x in Raro.faces)}";
+        player[] lista = select(p in players where p.index == 1);
+        log "{lista[0]} {count(q in lista)}";
+        lista = players;
+        lista[0] = none;
+        log "{players[0]} {lista[0]}";
+        players[0] uses Primera;
+        players[1] uses Exigente;
+    }
+    turn {
+        Carta c = ask current for elegir(Pozo);
+        log "{current} elige {c} con {current.strategy}";
+        integer n = ask current for numero(Raro.faces);
+        log "{current.name} numero {n} {roll Raro > 1}";
+        give 3 to current;
+        take 5 from current;
+        log "score {current.score}";
+    }
+    win when turns >= 4;
+}
+simulate 2 games of "Acciones" with 2 players seed 3 verbose;
+report { winrate; winrate by player; winrate by strategy; min turns; max turns; avg puntaje; min minimo; }

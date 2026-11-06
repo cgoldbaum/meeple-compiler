@@ -1,0 +1,9 @@
+game "Vacio" {
+    players 2 to 2;
+    die D faces {1, 2};
+    turn {
+        integer m = max(x in D.faces where x > 5 by x);
+    }
+}
+simulate 1 game of "Vacio" with 2 players;
+report { winrate; }

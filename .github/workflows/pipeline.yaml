@@ -27,6 +27,9 @@ jobs:
       - name: "Runtime."
         run: |
           src/main/bash/runtime.sh
+      - name: "End to end."
+        run: |
+          src/main/bash/e2e.sh
 
 name: "CI"
 

@@ -1,0 +1,17 @@
+simulate 1 game of "Umbral" with 3 players seed 0
+-- partida 1 --
+Jugador 1 5 5 Alta
+Jugador 2 2 2 Baja
+Jugador 3 5 -1 (sin estrategia)
+Jugador 1 5 10 Alta
+gana Jugador 1 en el turno 4
+winrate by player
+  Jugador 1: 100.00%
+  Jugador 2: 0.00%
+  Jugador 3: 0.00%
+winrate by strategy
+  Alta: 100.00%
+  Baja: 0.00%
+  (sin estrategia): 0.00%
+max mayor: 10
+avg total: 14.00

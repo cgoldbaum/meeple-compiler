@@ -1,0 +1,33 @@
+game "Contador" {
+    players 2 to 3;
+    decision d: integer;
+    strategy Nadie { d: prefer first; }
+    metric puntos = current.score;
+    turn { give 1 to current; }
+    win when current.score >= 3;
+}
+game "Ronda" {
+    players 3 to 3;
+    turn order counterclockwise;
+    win when current.index == 1;
+}
+game "Infinito" {
+    players 1 to 1;
+}
+game "Vacio" {
+    players 2 to 2;
+    metric indice = current.index + 7;
+    end after 0 turns;
+}
+simulate 10 games of "Contador" with 2 players;
+report {
+    winrate; winrate by player; winrate by strategy;
+    avg turns; min turns; max turns;
+    avg puntos; min puntos; max puntos;
+}
+simulate 4 games of "Ronda" with 3 players seed 5;
+report { winrate by player; avg turns; }
+simulate 3 games of "Infinito" with 1 players;
+report { winrate; avg turns; }
+simulate 2 games of "Vacio" with 2 players;
+report { winrate; avg turns; avg indice; }

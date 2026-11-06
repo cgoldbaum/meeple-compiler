@@ -1,0 +1,10 @@
+game "Opciones" {
+    players 2 to 2;
+    die D faces {1, 2};
+    decision d: integer;
+    strategy S { d: prefer first where option > 5; }
+    prepare { players[0] uses S; }
+    turn { integer x = ask current for d(D.faces); }
+}
+simulate 1 game of "Opciones" with 2 players;
+report { winrate; }

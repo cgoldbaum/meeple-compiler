@@ -1,0 +1,9 @@
+game "Nadie" {
+    players 2 to 2;
+    turn {
+        player nadie = none;
+        give nadie.score to current;
+    }
+}
+simulate 1 game of "Nadie" with 2 players;
+report { winrate; }

@@ -1,0 +1,9 @@
+game "Modulo" {
+    players 2 to 2;
+    turn {
+        integer cero = turns - 1;
+        give 10 % cero to current;
+    }
+}
+simulate 1 game of "Modulo" with 2 players;
+report { winrate; }

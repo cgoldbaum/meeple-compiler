@@ -1,0 +1,6 @@
+game "Indice" {
+    players 2 to 2;
+    turn { give players[2].score to current; }
+}
+simulate 1 game of "Indice" with 2 players;
+report { winrate; }

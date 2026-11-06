@@ -11,11 +11,12 @@ typedef struct {
 	 */
 	void * abstractSyntaxtTree;
 
-	// TODO: Add a symbol table.
-	// TODO: Add an stack to handle nested scopes.
-	// TODO: Add more configuration.
-	// TODO: Add whatever you need.
-	// TODO: ...
+	/**
+	 * Donde se escribe el programa en C generado: el primer argumento del
+	 * compilador. NULL si no se paso ninguno (el programa se genera igual y se
+	 * descarta).
+	 */
+	const char * outputPath;
 } CompilerState;
 
 #endif

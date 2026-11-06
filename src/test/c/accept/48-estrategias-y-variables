@@ -1,0 +1,34 @@
+// Las politicas leen variables del juego, una strategy se asigna desde una
+// variable local, y las metricas usan agregaciones anidadas.
+game "Umbral" {
+    players 3 to 3;
+    die D faces {5, 2, 9};
+    decision elegir: integer;
+    integer umbral = D.min + D.max;
+    strategy Alta { elegir: prefer max option where option < umbral; }
+    strategy Baja { elegir: prefer min option; }
+    metric mayor = max(p in players by p.score).score;
+    metric total = sum(p in players by p.score + count(q in players where q.score > p.score));
+    prepare {
+        strategy s = Baja;
+        players[0] uses Alta;
+        players[1] uses s;
+        umbral = umbral - 5;
+    }
+    turn {
+        integer n = ask current for elegir(D.faces);
+        if (current.strategy == Alta) {
+            give n to current;
+        } else {
+            if (not (current.name == "Jugador 3")) {
+                give n to current;
+            } else {
+                take 1 from current;
+            }
+        }
+        log "{current} {n} {current.score} {current.strategy}";
+    }
+    win when current.score >= 10;
+}
+simulate 1 game of "Umbral" with 3 players verbose;
+report { winrate by player; winrate by strategy; max mayor; avg total; }

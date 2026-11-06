@@ -1,0 +1,6 @@
+simulate 1 game of "Generado" with 1 players seed 0
+-- partida 1 --
+4 {b: true, n: -1, s: x} {b: false, n: -1, s: x} {b: true, n: 0, s: x} {b: false, n: 0, s: x}
+{b: true, n: 0, s: x} {b: true, n: -1, s: x} {b: false, n: 0, s: x}
+sin ganador despues de 0 turnos
+winrate: 0.00%

@@ -1,0 +1,7 @@
+simulate 1000 games of "La Oca" with 4 players seed 42
+winrate by player
+  Jugador 1: 32.00%
+  Jugador 2: 27.20%
+  Jugador 3: 22.20%
+  Jugador 4: 18.60%
+avg turns: 62.66

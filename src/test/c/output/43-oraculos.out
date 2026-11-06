@@ -1,0 +1,30 @@
+simulate 10 games of "Contador" with 2 players seed 0
+winrate: 100.00%
+winrate by player
+  Jugador 1: 100.00%
+  Jugador 2: 0.00%
+winrate by strategy
+  Nadie: sin jugadores
+  (sin estrategia): 50.00%
+avg turns: 5.00
+min turns: 5
+max turns: 5
+avg puntos: 3.00
+min puntos: 3
+max puntos: 3
+
+simulate 4 games of "Ronda" with 3 players seed 5
+winrate by player
+  Jugador 1: 0.00%
+  Jugador 2: 100.00%
+  Jugador 3: 0.00%
+avg turns: 3.00
+
+simulate 3 games of "Infinito" with 1 players seed 0
+winrate: 0.00%
+avg turns: 1000.00
+
+simulate 2 games of "Vacio" with 2 players seed 0
+winrate: 0.00%
+avg turns: 0.00
+avg indice: 7.00

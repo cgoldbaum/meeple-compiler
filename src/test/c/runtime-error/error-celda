@@ -1,0 +1,8 @@
+game "Celda" {
+    players 2 to 2;
+    board cells 5;
+    piece f;
+    turn { place f on board.cell(turns + 4); }
+}
+simulate 1 game of "Celda" with 2 players;
+report { winrate; }

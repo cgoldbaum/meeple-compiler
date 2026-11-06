@@ -1,0 +1,29 @@
+// Nombres validos en Meeple que en C son palabras reservadas o nombres del
+// runtime, y cadenas con caracteres que C escribe con secuencias de escape.
+game "Nombres de C" {
+    players 2 to 2;
+    board cells 5;
+    die int faces {1};
+    cardtype struct { integer char; string return; boolean default; }
+    deck main of struct {
+        card { return: "50% \ ok??="; default: true; char: 1; }
+        card {2, "tab	x", false}
+    }
+    deck NULL of struct per player;
+    piece mp_alloc per player;
+    integer printf = 7;
+    struct _x = none;
+    prepare {
+        integer while_ = roll int;
+        for (if_ in players) { draw 1 from main to if_.NULL; }
+        _x = players[1].NULL[0];
+        log "{players[0].NULL[0]} {_x} {printf + while_} {main.cardtype} {main.size}";
+    }
+    turn {
+        move current.mp_alloc forward printf;
+        log "{current.mp_alloc} {current.mp_alloc.owner} \ 100%";
+    }
+    end after 2 turns;
+}
+simulate 1 game of "Nombres de C" with 2 players verbose;
+report { winrate; }

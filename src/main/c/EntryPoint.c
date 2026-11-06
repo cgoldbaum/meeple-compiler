@@ -20,7 +20,8 @@ const int main(const int length, const char ** arguments) {
 		logDebugging(logger, "Argument %d: \"%s\"", k, arguments[k]);
 	}
 	CompilerState compilerState = {
-		.abstractSyntaxtTree = NULL
+		.abstractSyntaxtTree = NULL,
+		.outputPath = length > 1 ? arguments[1] : NULL
 	};
 	ModuleDestructor moduleDestructors[] = {
 		initializeAbstractSyntaxTreeModule(),
@@ -43,7 +44,10 @@ const int main(const int length, const char ** arguments) {
 	else {
 		// ----------------------------------------------------------------------------------------
 		// Beginning of the Backend... ------------------------------------------------------------
-		executeGenerator(&compilerState);
+		if (executeGenerator(&compilerState) != SUCCEEDED) {
+			logError(logger, "The code-generation phase cannot write the output program.");
+			compilationStatus = FAILED;
+		}
 		// ...end of the Backend. -----------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------
 	}

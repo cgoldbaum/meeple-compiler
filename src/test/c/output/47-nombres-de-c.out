@@ -1,0 +1,7 @@
+simulate 1 game of "Nombres de C" with 2 players seed 0
+-- partida 1 --
+{char: 1, return: 50% \ ok??=, default: true} {char: 2, return: tab	x, default: false} 8 struct 0
+mp_alloc de Jugador 1 (celda 4) Jugador 1 \ 100%
+mp_alloc de Jugador 2 (celda 4) Jugador 2 \ 100%
+sin ganador despues de 2 turnos
+winrate: 0.00%

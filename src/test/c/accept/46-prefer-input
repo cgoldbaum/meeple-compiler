@@ -1,0 +1,28 @@
+game "Humano" {
+    players 2 to 2;
+    board cells 5;
+    die D faces {3, 1, 3, 2};
+    piece a per player;
+    piece b per player;
+    decision numero: integer;
+    decision rival: player;
+    decision ficha: piece;
+    strategy Persona {
+        numero: prefer input where option > 1;
+        rival: prefer input;
+        ficha: prefer max option.cell, input;
+    }
+    prepare { players[0] uses Persona; players[1] uses Persona; }
+    turn {
+        integer n = ask current for numero(D.faces);
+        player r = ask current for rival(players);
+        piece f = ask current for ficha(current.pieces);
+        move f forward n;
+        give n to r;
+        log "{current} mueve {f} y le da {n} a {r}";
+    }
+    win when current.score >= 3;
+    end after 2 turns;
+}
+simulate 1 game of "Humano" with 2 players verbose;
+report { winrate by player; }
